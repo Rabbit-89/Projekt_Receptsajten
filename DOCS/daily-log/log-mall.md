@@ -9,10 +9,11 @@ En i teamet ansvarar för att loggen är uppdaterad innan dagens slut.
 Datum: 2025-10-__
 
 ## Team
-- Namn 1
-- Namn 2
-- Namn 3
-- Namn 4
+- Thi Phuong Trúc Dô
+- Nancy Samefors
+- Rabbiya Waqar
+- Elin Ratcliff
+- Suzan Al-Majdalawi
 
 ---
 
