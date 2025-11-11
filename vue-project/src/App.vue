@@ -3,7 +3,14 @@
 </script>
 
 <template>
-  <h1>Home</h1>
+  <header>Header</header>
+  
+  <main>
+   <h1>Samlas vad vill vissa i App sida</h1>
+
+  </main>
+
+  <footer>Footer</footer>
 </template>
 
 <style scoped>
