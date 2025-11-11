@@ -3,11 +3,12 @@
 </script>
 
 <template>
+<!-- Samlas vad vill vissa i App sida...vi kan skapa komponent Header - Footer - och sen import och skriva här-->
+ 
   <header>Header</header>
   
   <main>
-   <h1>Samlas vad vill vissa i App sida</h1>
-
+    <RouterView />
   </main>
 
   <footer>Footer</footer>
