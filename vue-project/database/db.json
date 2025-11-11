@@ -22,7 +22,7 @@
       "Serve immediately."
     ],
     "tags": ["quick", "healthy", "gluten-free-option"],
-    "image": null
+    "image": "https://www.themealdb.com/images/category/breakfast.png"
   },
   {
     "id": "b2",
@@ -46,7 +46,7 @@
       "Slide onto plate and serve warm."
     ],
     "tags": ["protein", "keto-friendly"],
-    "image": null
+    "image": "https://www.themealdb.com/images/category/breakfast.png"
   },
   {
     "id": "b3",
@@ -69,7 +69,7 @@
       "Serve immediately."
     ],
     "tags": ["vegan-option", "quick"],
-    "image": null
+    "image": "https://www.themealdb.com/images/category/breakfast.png"
   },
   {
     "id": "l1",
@@ -95,7 +95,7 @@
       "Cut in half and serve."
     ],
     "tags": ["handheld", "low-carb-option"],
-    "image": null
+    "image": "https://www.themealdb.com/images/category/chicken.png"
   },
   {
     "id": "l2",
@@ -121,7 +121,7 @@
       "Garnish with parsley and serve chilled or room temperature."
     ],
     "tags": ["vegan", "meal-prep"],
-    "image": null
+    "image": "https://www.themealdb.com/images/category/chicken.png"
   },
   {
     "id": "l3",
@@ -146,7 +146,7 @@
       "Serve warm."
     ],
     "tags": ["pasta", "seafood"],
-    "image": null
+    "image": "https://www.themealdb.com/images/category/chicken.png"
   },
   {
     "id": "d1",
@@ -173,7 +173,7 @@
       "Garnish with green onions and sesame seeds and serve."
     ],
     "tags": ["vegan", "stir-fry", "quick-dinner"],
-    "image": null
+    "image": "https://www.themealdb.com/images/category/miscellaneous.png"
   },
   {
     "id": "d2",
@@ -200,7 +200,7 @@
       "Return chicken to pan, spoon sauce over and serve."
     ],
     "tags": ["low-carb-option", "protein"],
-    "image": null
+    "image": "https://www.themealdb.com/images/category/miscellaneous.png"
   },
   {
     "id": "d3",
@@ -224,7 +224,7 @@
       "Serve with lemon wedges."
     ],
     "tags": ["sheet-pan", "healthy"],
-    "image": null
+    "image": "https://www.themealdb.com/images/category/miscellaneous.png"
   },
   {
     "id": "s1",
@@ -247,7 +247,7 @@
       "Chill until set and enjoy."
     ],
     "tags": ["no-bake", "snack"],
-    "image": null
+    "image": "https://www.themealdb.com/images/category/dessert.png"
   },
   {
     "id": "s2",
@@ -268,7 +268,7 @@
       "Top with lemon zest and serve chilled."
     ],
     "tags": ["light", "quick-dessert"],
-    "image": null
+    "image": "https://www.themealdb.com/images/category/dessert.png"
   },
   {
     "id": "s3",
