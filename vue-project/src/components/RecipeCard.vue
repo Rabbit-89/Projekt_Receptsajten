@@ -32,10 +32,10 @@ defineProps({
       <h5 class="recipe-title">
         {{ recipe.title }}
       </h5>
-      <p class="recipe-description">Good recipe göra i kort tid, för äta i {{ recipe.category }} .</p>
+      <p class="recipe-description">Ett snabbt och gott recept, perfekt att njuta som <strong>{{ recipe.category }}</strong>.</p>
       <div>
-        <span class="recipe-difficulty">Difficulty: {{ recipe.difficulty }}</span>
-        <span class="recipe-time">{{ recipe.totalTime }} min</span>
+        <span class="recipe-difficulty"><strong>Difficulty: </strong>{{ recipe.difficulty }} </span>
+        <span class="recipe-time"><strong> | Tid: </strong>{{ recipe.totalTime }} min</span>
       </div>
     </div>
   </div>
