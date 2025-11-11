@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import RecipeCard from '../components/RecipeCard.vue';
 
 const recipeList = ref([]);
 
@@ -15,8 +16,12 @@ onMounted(() => {
 
 <template>
   <h1>
-    <pre>{{ recipeList }}</pre>
+   <!--- <pre>{{ recipeList }}</pre>-->
+   Recipes
   </h1>
+  <div>
+    <RecipeCard v-for="recipe in recipeList" :key="recipe.id" :recipe="recipe"/>
+  </div>
 
 </template>
 
