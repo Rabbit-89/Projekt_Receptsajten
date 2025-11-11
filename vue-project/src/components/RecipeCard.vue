@@ -58,6 +58,7 @@ defineProps({
     display: flex;
     justify-content: center;
     padding-top: 0.75rem;
+    background-color: #111827;
 }
 .recipe-image {
     border-top-left-radius: 0.75rem;
