@@ -35,6 +35,19 @@
 
   --section-gap: 160px;
 }
+/* COLORS VARIABLES FROM FIGMA FILE */
+:root {
+
+    /* COLORS */
+    --white-color: #FFFFFF;
+    --black-color: #191919;
+    --dark-yellow-color: #F0C92B;
+    --gold-color: #DB9807;
+    --orange-color: #F9AE4A;
+    --brown-color: #573311;
+    --light-yellow-color: #F6F3E8;
+    --grey-color: #EBEBEA;
+}
 
 @media (prefers-color-scheme: dark) {
   :root {
