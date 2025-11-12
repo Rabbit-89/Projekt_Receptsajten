@@ -1,4 +1,4 @@
-<!--
+
 <script setup>
 import { computed } from "vue";
 import defaultImage from "../assets/images/default-recipe.svg";
@@ -15,8 +15,8 @@ const computedImage = computed(() =>
   <div class="recipe-card">
     <div class="recipe-image-wrapper">
       <img class="recipe-image" :src="computedImage" :alt="$props.recipe.title" />
-    </div>
-// vi kan byta med den part skriva istallt line20 to line30  för fixa image när image: null--> 
+    </div><!---
+// vi kan byta med den part skriva istallt line20 to line30  för fixa image när image: null-- 
 <script setup>
 defineProps({
   recipe: Object,
@@ -27,7 +27,7 @@ defineProps({
   <div class="recipe-card">
     <div class="recipe-image-wrapper">
       <img class="recipe-image" :src="recipe.image" :alt="recipe.title" />
-    </div>
+    </div>-->
     <div class="recipe-info">
       <h5 class="recipe-title">
         {{ recipe.title }}
@@ -58,11 +58,11 @@ defineProps({
     display: flex;
     justify-content: center;
     padding-top: 0.75rem;
-    background-color: #111827;
+    background-color: rgb(99, 85, 85);
 }
 .recipe-image {
-    border-top-left-radius: 0.75rem;
-    border-top-right-radius: 0.75rem;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
     width: 100%;
     height: auto;
 }
@@ -93,7 +93,7 @@ defineProps({
     .recipe-title,
     .recipe-description,
     .recipe-meta {
-        color: #f9fafb;
+        color: #f9fafb;scm-history-item:c%3A%5CUsers%5CSuzan%5Csource%5Crepos%5CProjekt_Receptsajten?%7B%22repositoryId%22%3A%22scm0%22%2C%22historyItemId%22%3A%22c93f6b7c1a400d320aad5efc6733e29ae40f7279%22%2C%22historyItemParentId%22%3A%220cfdc83bc6cdcdda6dc8d209d6edc0bb36ea549c%22%2C%22historyItemDisplayId%22%3A%22c93f6b7%22%7D
     }
 }
 </style>
