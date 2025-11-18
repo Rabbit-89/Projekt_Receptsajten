@@ -53,6 +53,7 @@
 
     /* FONTS */
     --font-main: 'Inter', sans-serif;
+    --font-secondary: 'Cormorant', serif;
 }
 
 /* @media (prefers-color-scheme: dark) {

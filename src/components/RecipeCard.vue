@@ -1,4 +1,6 @@
 <script setup>
+import { RouterLink } from 'vue-router'
+
 defineProps({
     recipe: {
         type: Object,
@@ -8,6 +10,7 @@ defineProps({
 </script>
 
 <template>
+    <RouterLink :to="`/recipe/${recipe.id}`" class="recipe-card-link">
     <div class="recipe-card">
         <div class="recipe-image">
             <img :src="recipe.image" :alt="recipe.name"/>
@@ -22,9 +25,17 @@ defineProps({
             <p class="recipe-description">{{ recipe.description }}</p>
         </div>
     </div>
+    </RouterLink>
 </template>
 
 <style scoped>
+.recipe-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  height: 100%;
+}
+
 .recipe-card {
   font-family: var(--font-main);
   background-color: #f9f9f9;
