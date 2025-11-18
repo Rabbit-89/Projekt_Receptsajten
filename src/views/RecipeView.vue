@@ -3,6 +3,7 @@ import { ref, onMounted, computed } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import recipesData from '../data/recipes.json'
 import IngredientsComponent from '../components/IngredientsComponent.vue'
+import InstructionsComponent from '../components/InstructionsComponent.vue'
 
 const route = useRoute()
 const recipe = ref(null)
@@ -21,15 +22,6 @@ const categoryName = computed(() => {
   return formatCategoryName(recipe.value.categorySlug)
 })
 
-const toggleStep = (index) => {
-  const newSet = new Set(checkedSteps.value)
-  if (newSet.has(index)) {
-    newSet.delete(index)
-  } else {
-    newSet.add(index)
-  }
-  checkedSteps.value = newSet
-}
 
 onMounted(() => {
   const recipeId = parseInt(route.params.id)
@@ -81,27 +73,11 @@ onMounted(() => {
         @update:checked-ingredients="checkedIngredients = $event"
       />
 
-      <div class="steps-section">
-        <h2 class="section-title">Instructions</h2>
-        <ol class="steps-list">
-          <li 
-            v-for="(step, index) in recipe.steps" 
-            :key="index" 
-            class="step-item"
-            :class="{ 'checked': checkedSteps.has(index) }"
-          >
-            <label class="checkbox-label">
-              <input 
-                type="checkbox" 
-                :checked="checkedSteps.has(index)"
-                @change="toggleStep(index)"
-                class="checkbox-input"
-              />
-              <span class="checkbox-text">{{ step }}</span>
-            </label>
-          </li>
-        </ol>
-      </div>
+      <InstructionsComponent 
+        :steps="recipe.steps"
+        :checked-steps="checkedSteps"
+        @update:checked-steps="checkedSteps = $event"
+      />
     </div>
   </main>
 
@@ -160,7 +136,7 @@ onMounted(() => {
 .recipe-header {
   display: flex;
   flex-direction: column;
-  margin-bottom: 3rem;
+  margin-bottom: 1rem;
 }
 
 .recipe-name {
@@ -221,57 +197,8 @@ onMounted(() => {
 .recipe-content {
     display: grid;
     grid-template-columns: 1fr;
-    margin-top: 2rem;
-}
-
-.section-title {
-    font-size: 24px;
-    font-family: var(--font-secondary);
-    color: var(--black-color);
-    margin-bottom: 1.5rem;
-    font-weight: 600;
-    border-bottom: 2px solid var(--light-yellow-color);
-    padding-bottom: 0.5rem;
-}
-
-.steps-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.step-item {
-    transition: opacity 0.2s ease;
-}
-
-.step-item.checked {
-    opacity: 0.5;
-}
-
-.checkbox-label {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
-    cursor: pointer;
-    color: var(--brown-color);
-    line-height: 1.6;
-}
-
-.checkbox-input {
-    width: 16px;
-    height: 16px;
-    min-width: 16px;
-    cursor: pointer;
-    accent-color: var(--gold-color);
-}
-
-.checkbox-text {
-    flex: 1;
-    transition: text-decoration 0.2s ease;
-}
-
-.step-item.checked .checkbox-text {
-    text-decoration: line-through;
+    margin-top: 1rem;
+    gap: 1rem;
 }
 
 .recipe-not-found {
