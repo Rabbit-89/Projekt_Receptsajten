@@ -1,21 +1,31 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+import Header from './components/Header.vue';
 
 </script>
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-    </div>
+<Header/> 
   </header>
-
-  <RouterView />
+<body>
+ <RouterView />
+</body>
+ 
 </template>
 
 <style scoped>
-header {
+
+body{
+  margin: 2rem;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #ffffff;
+  color: #2c3e50;
+  line-height: 1.6;
+}
+/* header {
   line-height: 1.5;
   max-height: 100vh;
 }
@@ -75,5 +85,5 @@ nav a:first-of-type {
     padding: 1rem 0;
     margin-top: 1rem;
   }
-}
+} */
 </style>
