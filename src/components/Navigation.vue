@@ -3,35 +3,30 @@ import { RouterLink } from 'vue-router'
 </script>
 
 <template>
-    <nav class="navbar">
-  <div class="logobox">
- <img alt="Recipe Website logo" class="logo" src="/src/assets/icon_logo.svg" width="125" height="125" />
-    <h2>logo</h2>
+  <nav class="navbar">
+    <div class="logobox">
+      <img alt="Recipe Website logo" class="logo" src="/src/assets/icon_logo.svg" width="125" height="125" />
+      <h2>logo</h2>
     </div>
 
-<div class="navigation">
-    <ul class="nav-links">
-        <li><RouterLink to="/">Home</RouterLink></li>
-        <li><RouterLink to="/categories">Categories</RouterLink></li>
-        <li><RouterLink to="/recipes">Recipes</RouterLink></li>
-    </ul>
+    <div class="nav-link">
+      <RouterLink to="/">Home</RouterLink>
 
-    <!-- <ul class="burger-items">
+      <!-- <ul class="burger-items">
 <li><RouterLink to="/">Home</RouterLink></li>
         <li><RouterLink to="/categories">Categories</RouterLink></li>
-        <li><RouterLink to="/recipes">Recipes</RouterLink></li>
+        
     </ul> -->
-</div>
+    </div>
 
 
-    </nav>
-  
+  </nav>
+
 </template>
 
 
 
 <style scoped>
-
 @media screen and (min-width: 576px) {
   /* ... */
 }
@@ -58,9 +53,12 @@ import { RouterLink } from 'vue-router'
   line-height: 1.5;
   padding: 0.75rem 1rem;
   box-sizing: border-box;
-  background: rgba(0, 0, 0, 0.70); /* semi-transparent so hero shows through */
-  z-index: 4; /* on top of image */
+  background: rgba(0, 0, 0, 0.70);
+  /* semi-transparent so hero shows through */
+  z-index: 4;
+  /* on top of image */
 }
+
 .logobox {
   display: flex;
   align-items: center;
@@ -74,28 +72,27 @@ import { RouterLink } from 'vue-router'
   height: auto;
 }
 
-.nav-links a.router-link-exact-active {
-  color: orangered;
+.nav-link a.router-link-exact-active {
+  font-family:var(--font-primary);
+  font-size: 1.25rem;
+  text-decoration: none;
+  border-bottom: 4px solid var(--orange-color);
 }
 
-.nav-links a.router-link-exact-active:hover {
+.nav-link a.router-link-exact-active:hover {
   background-color: transparent;
 }
 
-.nav-links a {
- 
+.nav-link a {
+
   display: inline-block;
   padding: 0 1rem;
-  border-left: 1px solid rgba(255,255,255,0.12);
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
   color: #ffffff;
 }
 
 nav a:first-of-type {
   border: 0;
 }
-.nav-links{
-    list-style: none;
-    display:flex;
-    flex-direction:row;
-}
+
 </style>
