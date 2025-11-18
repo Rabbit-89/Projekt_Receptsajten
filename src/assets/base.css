@@ -49,6 +49,10 @@
     --brown-color: #573311;
     --light-yellow-color: #F6F3E8;
     --grey-color: #EBEBEA;
+    --dark-gray-color: #757575;
+
+    /* FONTS */
+    --font-main: 'Inter', sans-serif;
 }
 
 /* @media (prefers-color-scheme: dark) {
