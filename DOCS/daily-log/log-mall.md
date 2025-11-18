@@ -21,8 +21,11 @@ Datum: 2025-10-__
 
 | Namn | Vad gjorde jag senast? | Vad ska jag göra idag? | Hinder? |
 |------|-------------------------|------------------------|----------|
-|      |                         |                        |          |
-|      |                         |                        |          |
+|Elin  |                         |                        |          |
+|Nancy |                         |                        |          |
+|Rabbiya|                         |                        |          |
+|Suzan |                         |                        |          |
+|Truc  |                         |                        |          |
 
 **Dagens gemensamma mål:**  
 - [ ]  
@@ -50,7 +53,8 @@ Datum: 2025-10-__
 - Vad var utmanande?  
 - Vad lärde vi oss?  
 - Vad ska vi tänka på till nästa gång?  
-- **Vad vill vi ta upp med utbildaren?**
+
+**Vad vill vi ta upp med utbildaren?**
 
 ---
 
