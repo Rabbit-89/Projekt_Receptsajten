@@ -2,6 +2,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import recipesData from '../data/recipes.json'
+import IngredientsComponent from '../components/IngredientsComponent.vue'
 
 const route = useRoute()
 const recipe = ref(null)
@@ -19,16 +20,6 @@ const categoryName = computed(() => {
   if (!recipe.value) return ''
   return formatCategoryName(recipe.value.categorySlug)
 })
-
-const toggleIngredient = (index) => {
-  const newSet = new Set(checkedIngredients.value)
-  if (newSet.has(index)) {
-    newSet.delete(index)
-  } else {
-    newSet.add(index)
-  }
-  checkedIngredients.value = newSet
-}
 
 const toggleStep = (index) => {
   const newSet = new Set(checkedSteps.value)
@@ -84,27 +75,11 @@ onMounted(() => {
     </div>
 
     <div class="recipe-content">
-      <div class="ingredients-section">
-        <h2 class="section-title">Ingredients</h2>
-        <ul class="ingredients-list">
-          <li 
-            v-for="(ingredient, index) in recipe.ingredients" 
-            :key="index" 
-            class="ingredient-item"
-            :class="{ 'checked': checkedIngredients.has(index) }"
-          >
-            <label class="checkbox-label">
-              <input 
-                type="checkbox" 
-                :checked="checkedIngredients.has(index)"
-                @change="toggleIngredient(index)"
-                class="checkbox-input"
-              />
-              <span class="checkbox-text">{{ ingredient }}</span>
-            </label>
-          </li>
-        </ul>
-      </div>
+      <IngredientsComponent 
+        :ingredients="recipe.ingredients"
+        :checked-ingredients="checkedIngredients"
+        @update:checked-ingredients="checkedIngredients = $event"
+      />
 
       <div class="steps-section">
         <h2 class="section-title">Instructions</h2>
@@ -259,23 +234,28 @@ onMounted(() => {
     padding-bottom: 0.5rem;
 }
 
-
-
-.ingredients-list, .steps-list {
+.steps-list {
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
-.ingredient-item, .step-item {
+.step-item {
     transition: opacity 0.2s ease;
 }
 
-
-.ingredient-item.checked, .step-item.checked {
+.step-item.checked {
     opacity: 0.5;
 }
 
+.checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    cursor: pointer;
+    color: var(--brown-color);
+    line-height: 1.6;
+}
 
 .checkbox-input {
     width: 16px;
@@ -290,7 +270,6 @@ onMounted(() => {
     transition: text-decoration 0.2s ease;
 }
 
-.ingredient-item.checked .checkbox-text,
 .step-item.checked .checkbox-text {
     text-decoration: line-through;
 }
