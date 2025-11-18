@@ -56,30 +56,31 @@ onMounted(() => {
       <span class="breadcrumb-current">{{ recipe.name }}</span>
     </nav>
     
+
     <div class="recipe-header">
         <h1 class="recipe-name">{{ recipe.name }}</h1>
         <div class="recipe-image-container">
-        <img :src="recipe.image" :alt="recipe.name" class="recipe-image" />
-    </div>
-    <div class="recipe-meta">
-      <div class="meta-item">
-        <img src="@/assets/icons/time.svg" alt="Clock" class="meta-icon" />
-        <span>{{ recipe.cookingTime }} min</span>
-      </div>
-      <div class="meta-item">
-        <span>{{ recipe.ingredientsCount }} ingredients</span>
-      </div>
-      <div class="meta-item">
-        <img src="@/assets/icons/star.svg" alt="Star" class="meta-icon" />
-        <span>{{ recipe.rating }}</span>
-      </div>
-      <div class="meta-item">
-        <img src="@/assets/icons/comment.svg" alt="Comment" class="meta-icon" />
-        <span> 10 </span> 
-        <!-- add dynamic comment count above!! -->
-      </div>
-    </div>
-    <p class="recipe-description">{{ recipe.description }}</p>
+            <img :src="recipe.image" :alt="recipe.name" class="recipe-image" />
+        </div>
+        <div class="recipe-meta">
+            <div class="meta-item">
+                <img src="@/assets/icons/time.svg" alt="Clock" class="meta-icon" />
+                <span>{{ recipe.cookingTime }} min</span>
+            </div>
+            <div class="meta-item">
+                <span>{{ recipe.ingredientsCount }} ingredients</span>
+            </div>
+            <div class="meta-item">
+                <img src="@/assets/icons/star.svg" alt="Star" class="meta-icon" />
+                <span>{{ recipe.rating }}</span>
+            </div>
+            <div class="meta-item">
+                <img src="@/assets/icons/comment.svg" alt="Comment" class="meta-icon" />
+                <span> 10 </span> 
+                <!-- add dynamic comment count above!! -->
+            </div>
+        </div>
+        <p class="recipe-description">{{ recipe.description }}</p>
     </div>
 
     <div class="recipe-content">
@@ -155,7 +156,7 @@ onMounted(() => {
 }
 
 .breadcrumb-link {
-  color: var(--brown-color);
+  color: var(--black-color);
   text-decoration: none;
   font-weight: 500;
   transition: color 0.2s ease;
@@ -163,10 +164,11 @@ onMounted(() => {
   flex-wrap: nowrap;
   text-overflow: ellipsis;
   white-space: nowrap;
+  text-decoration: underline;
 }
 
 .breadcrumb-link:hover {
-  color: var(--gold-color);
+  text-decoration: none;
 }
 
 .breadcrumb-separator {
@@ -306,34 +308,24 @@ onMounted(() => {
 }
 
 @media (min-width: 768px) {
-    .recipe-header {
-        flex-direction: row;
-        align-items: flex-start;
-  }
-
     .recipe-image-container {
-        flex: 1;
-        max-width: 500px;
         height: 400px;
+        order: 4;
+        margin-top: 1rem;
+        
+    }
+    .recipe-image {
+        height: 400px;
+        object-position: bottom;
     }
 
-    .recipe-info {
-        flex: 1;
-    }
-
-    .recipe-content {
-        grid-template-columns: 1fr 1.5fr;
+    .recipe-meta {
+        margin-top: 1rem;
     }
 }
 
 @media (min-width: 1024px) {
-    .recipe-view {
-        padding: 3rem;
-    }
 
-    .recipe-name {
-        font-size: 3rem;
-    }
 }
 </style>
 
