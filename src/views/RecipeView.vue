@@ -59,8 +59,7 @@ onMounted(() => {
             </div>
             <div class="meta-item">
                 <img src="@/assets/icons/comment.svg" alt="Comment" class="meta-icon" />
-                <span> 10 </span> 
-                <!-- add dynamic comment count above!! -->
+                <span>{{ recipe.comments.length }}</span>
             </div>
         </div>
         <p class="recipe-description">{{ recipe.description }}</p>
