@@ -13,11 +13,13 @@ const categories = ref([
   <section class="category-box">
  <h1>Categories</h1>
     <div class="category-nav">
-      <router-link :to="{ name: 'home' }" :class="{ active: !$route.params.categoryId }">All Recipes</router-link>
+      <router-link :to="{ name: 'home'}" :class="{ active: !$route.params.categoryId }">All Recipes</router-link>
 
       <router-link v-for="category in categories" :key="category.id"
         :to="{ name: 'category', params: { categoryId: category.categorySlug } }">
-        {{ category.name }}{{ category.categorySlug.length }}</router-link>
+        <div class="category-icon"></div>
+        <div class="category-content">{{ category.name }}{{ category.categorySlug.length }}</div>
+        </router-link>
     </div>
 
     <!-- <ul class="list">
@@ -53,6 +55,7 @@ justify-content: center;
   display: flex;
   justify-content: space-around;
   align-items: center;
+  font-family: var(--font-primary);
   height: 100%;
   list-style-type: none;
   padding: 0;
@@ -65,5 +68,26 @@ justify-content: center;
   font-family: 'Inter', sans-serif;
   font-size: 1.2em;
   flex-direction: column;
+}
+
+@media screen and (min-width: 576px) {
+  /* ... */
+  .category-nav{
+    display:grid;
+    flex-direction: column;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  
+}
+
+/* Styles for medium screens (e.g., laptops) */
+@media screen and (min-width: 768px) {
+  /* ... */
+}
+
+/* Styles for large screens */
+@media screen and (min-width: 1200px) {
+  /* ... */
 }
 </style>
