@@ -4,7 +4,7 @@ import RecipeCard from '../components/RecipeCard.vue'
 import recipesData from '../data/recipes.json'
 
 const recipes = ref([])
-import {ref, computed, watch} from 'vue';
+
 import CategoryNav from '@/components/CategoryNav.vue';
 import CategoryView from './CategoryView.vue';
 import { useRoute } from 'vue-router';
