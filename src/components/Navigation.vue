@@ -73,7 +73,7 @@ import { RouterLink } from 'vue-router'
 }
 
 .nav-link a.router-link-exact-active {
-  font-family:var(--font-primary);
+  font-family:var(--font-main);
   font-size: 1.25rem;
   text-decoration: none;
   border-bottom: 4px solid var(--orange-color);

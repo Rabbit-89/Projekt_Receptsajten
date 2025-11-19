@@ -55,7 +55,7 @@ justify-content: center;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  font-family: var(--font-primary);
+  font-family: var(--font-main);
   height: 100%;
   list-style-type: none;
   padding: 0;

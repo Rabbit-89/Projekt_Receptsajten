@@ -21,7 +21,7 @@ h1 {
 }
 
 p {
-    font-family: var(--font-primary);
+    font-family: var(--font-main);
     font-size: 1.5rem;
     font-style: normal;
     line-height: 2rem;
