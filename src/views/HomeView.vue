@@ -1,11 +1,18 @@
 <script setup>
-import CategoryList from '@/components/CategoryList.vue';
+import {ref, computed, watch} from 'vue';
+import CategoryNav from '@/components/CategoryNav.vue';
+import CategoryView from './CategoryView.vue';
+import { useRoute } from 'vue-router';
+const route = useRoute();
 </script>
 
 <template>
   <main>
-    <CategoryList/>
+    <CategoryNav/>
+    <CategoryView/>
   </main>
+
+ 
 </template>
 
 <style scoped>
