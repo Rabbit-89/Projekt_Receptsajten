@@ -13,7 +13,7 @@ const categories = ref([
   <section class="category-box">
  <h1>Categories</h1>
     <div class="category-nav">
-      <router-link :to="{ name: 'home'}" :class="{ active: !$route.params.categoryId }">All Recipes</router-link>
+      <router-link :to="{ name: 'home'}" :class="{ active: !$route.params.categoryId }">All Recipes!</router-link>
 
       <router-link v-for="category in categories" :key="category.id"
         :to="{ name: 'category', params: { categoryId: category.categorySlug } }">
