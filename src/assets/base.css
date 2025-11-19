@@ -37,6 +37,12 @@
 
   --section-gap: 160px;
 } */
+
+:root{
+  /* Font Families */
+  --font-primary: 'Inter', sans-serif;
+  --font-secondary: 'Cormorant', serif;
+}
 /* COLORS VARIABLES FROM FIGMA FILE */
 :root {
 
