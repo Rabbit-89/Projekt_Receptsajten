@@ -1,54 +1,66 @@
 <script setup>
 const props = defineProps({
-  steps: {
+  items: {
     type: Array,
     required: true
   },
-  checkedSteps: {
+  checkedItems: {
     type: Set,
     required: true
+  },
+  title: {
+    type: String,
+    required: true
+  },
+  listType: {
+    type: String,
+    default: 'unordered',
+    validator: (value) => ['ordered', 'unordered'].includes(value)
   }
 })
 
-const emit = defineEmits(['update:checkedSteps'])
+const emit = defineEmits(['update:checkedItems'])
 
-const toggleStep = (index) => {
-  const newSet = new Set(props.checkedSteps)
+const toggleItem = (index) => {
+  const newSet = new Set(props.checkedItems)
   if (newSet.has(index)) {
     newSet.delete(index)
   } else {
     newSet.add(index)
   }
-  emit('update:checkedSteps', newSet)
+  emit('update:checkedItems', newSet)
 }
 </script>
 
 <template>
-  <div class="instructions-section">
-    <h2 class="section-title">Instructions</h2>
-    <ol class="instructions-list">
+  <div class="checklist-section">
+    <h2 class="section-title">{{ title }}</h2>
+    <component 
+      :is="listType === 'ordered' ? 'ol' : 'ul'" 
+      class="checklist-list"
+    >
       <li 
-        v-for="(step, index) in steps" 
+        v-for="(item, index) in items" 
         :key="index" 
-        class="step-item"
-        :class="{ 'checked': checkedSteps.has(index) }"
+        class="checklist-item"
+        :class="{ 'checked': checkedItems.has(index) }"
       >
         <label class="checkbox-label">
           <input 
             type="checkbox" 
-            :checked="checkedSteps.has(index)"
-            @change="toggleStep(index)"
+            :checked="checkedItems.has(index)"
+            @change="toggleItem(index)"
             class="checkbox-input"
           />
-          <span class="checkbox-text">{{ step }}</span>
+          <span class="checkbox-text">{{ item }}</span>
         </label>
       </li>
-    </ol>
+    </component>
   </div>
 </template>
 
 <style scoped>
-.instructions-section {
+.checklist-section {
     background-color: var(--white-color);
     padding: 16px 8px;
     border: 1px solid var(--dark-gray-color);
@@ -64,18 +76,18 @@ const toggleStep = (index) => {
     padding-bottom: 0.5rem;
 }
 
-.instructions-list {
+.checklist-list {
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
-.step-item {
+.checklist-item {
     transition: opacity 0.2s ease;
     padding: 8px 0;
 }
 
-.step-item.checked {
+.checklist-item.checked {
     opacity: 0.5;
 }
 
@@ -101,7 +113,7 @@ const toggleStep = (index) => {
     transition: text-decoration 0.2s ease;
 }
 
-.step-item.checked .checkbox-text {
+.checklist-item.checked .checkbox-text {
     text-decoration: line-through;
 }
 </style>
