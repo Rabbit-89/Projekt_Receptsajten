@@ -2,7 +2,9 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import recipesData from '../data/recipes.json'
-import ChecklistComponent from '../components/ChecklistComponent.vue'
+import Checklist from '../components/Checklist.vue'
+import Breadcrumbs from '../components/Breadcrumbs.vue'
+import RecipeHeader from '../components/RecipeHeader.vue'
 
 const route = useRoute()
 const recipe = ref(null)
@@ -21,6 +23,14 @@ const categoryName = computed(() => {
   return formatCategoryName(recipe.value.categorySlug)
 })
 
+const breadcrumbs = computed(() => {
+  if (!recipe.value) return []
+  return [
+    { label: 'Home', to: '/' },
+    { label: categoryName.value, to: `/category/${recipe.value.categorySlug}` },
+    { label: recipe.value.name }
+  ]
+})
 
 onMounted(() => {
   const recipeId = parseInt(route.params.id)
@@ -30,42 +40,20 @@ onMounted(() => {
 
 <template>
   <main class="recipe-view" v-if="recipe">
-    <nav class="breadcrumbs">
-      <RouterLink to="/" class="breadcrumb-link">Home</RouterLink>
-      <span class="breadcrumb-separator">></span>
-      <RouterLink :to="`/category/${recipe.categorySlug}`" class="breadcrumb-link">{{ categoryName }}</RouterLink>
-      <span class="breadcrumb-separator">></span>
-      <span class="breadcrumb-current">{{ recipe.name }}</span>
-    </nav>
-    
+    <Breadcrumbs :items="breadcrumbs" />
 
-    <div class="recipe-header">
-        <h1 class="recipe-name">{{ recipe.name }}</h1>
-        <div class="recipe-image-container">
-            <img :src="recipe.image" :alt="recipe.name" class="recipe-image" />
-        </div>
-        <div class="recipe-meta">
-            <div class="meta-item">
-                <img src="@/assets/icons/time.svg" alt="Clock" class="meta-icon" />
-                <span>{{ recipe.cookingTime }} min</span>
-            </div>
-            <div class="meta-item">
-                <span>{{ recipe.ingredientsCount }} ingredients</span>
-            </div>
-            <div class="meta-item">
-                <img src="@/assets/icons/star.svg" alt="Star" class="meta-icon" />
-                <span>{{ recipe.rating }}</span>
-            </div>
-            <div class="meta-item">
-                <img src="@/assets/icons/comment.svg" alt="Comment" class="meta-icon" />
-                <span>{{ recipe.comments.length }}</span>
-            </div>
-        </div>
-        <p class="recipe-description">{{ recipe.description }}</p>
-    </div>
+    <RecipeHeader
+      :name="recipe.name"
+      :image="recipe.image"
+      :cooking-time="recipe.cookingTime"
+      :ingredients-count="recipe.ingredientsCount"
+      :rating="recipe.rating"
+      :comments-count="recipe.comments.length"
+      :description="recipe.description"
+    />
 
     <div class="recipe-content">
-      <ChecklistComponent 
+      <Checklist 
         :items="recipe.ingredients"
         :checked-items="checkedIngredients"
         title="Ingredients"
@@ -73,7 +61,7 @@ onMounted(() => {
         @update:checked-items="checkedIngredients = $event"
       />
 
-      <ChecklistComponent 
+      <Checklist 
         :items="recipe.steps"
         :checked-items="checkedSteps"
         title="Instructions"
@@ -99,13 +87,26 @@ onMounted(() => {
   background-color: var(--light-yellow-color);
 }
 
-.breadcrumbs {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.5rem;
-  margin-bottom: 2rem;
+.recipe-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  margin-top: 1rem;
+  gap: 1rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.recipe-not-found {
+  text-align: center;
+  padding: 4rem 2rem;
   font-family: var(--font-main);
-  font-size: 14px;
+  color: var(--black-color);
+}
+
+.recipe-not-found h2 {
+  color: var(--black-color);
+  margin-bottom: 2rem;
 }
 
 .breadcrumb-link {
@@ -113,132 +114,11 @@ onMounted(() => {
   text-decoration: none;
   font-weight: 500;
   transition: color 0.2s ease;
-  display: flex;
-  flex-wrap: nowrap;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   text-decoration: underline;
 }
 
 .breadcrumb-link:hover {
   text-decoration: none;
-}
-
-.breadcrumb-separator {
-  color: var(--dark-gray-color);
-  margin: 0 0.25rem;
-}
-
-.breadcrumb-current {
-  color: var(--black-color);
-  font-weight: 500;
-
-}
-
-.recipe-header, .recipe-content {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.recipe-header {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1rem;
-}
-
-.recipe-name {
-  font-size: 36px;
-  line-height: normal;
-  color: var(--black-color);
-  margin: 0;
-  font-weight: 600;
-  font-family: var(--font-secondary);
-  margin-bottom: 7px;
-}
-.recipe-image-container {
-  width: 100%;
-  height: 300px;
-  overflow: hidden;
-  margin-bottom: 1rem;
-}
-
-.recipe-image {
-    width: 100%;
-    height: 300px;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-}
-
-.recipe-meta {
-    display: flex;
-    gap: 2rem;
-    flex-wrap: wrap;
-    margin-bottom: 2rem;
-}
-
-.meta-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--brown-color);
-    font-size: 1rem;
-}
-
-.meta-icon {
-    width: 16px;
-    height: 16px;
-}
-
-.recipe-description {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    font-family: var(--font-main);
-    font-size: 14px;
-    color: var(--black-color);
-    line-height: 22px;
-}
-
-
-.recipe-content {
-    display: grid;
-    grid-template-columns: 1fr;
-    margin-top: 1rem;
-    gap: 1rem;
-}
-
-.recipe-not-found {
-    text-align: center;
-    padding: 4rem 2rem;
-    font-family: var(--font-main);
-    color: var(--black-color);
-}
-
-.recipe-not-found h2 {
-    color: var(--black-color);
-    margin-bottom: 2rem;
-}
-
-@media (min-width: 768px) {
-    .recipe-image-container {
-        height: 400px;
-        order: 4;
-        margin-top: 1rem;
-        
-    }
-    .recipe-image {
-        height: 400px;
-        object-position: bottom;
-    }
-
-    .recipe-meta {
-        margin-top: 1rem;
-    }
-}
-
-@media (min-width: 1024px) {
-
 }
 </style>
 
