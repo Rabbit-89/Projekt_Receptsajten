@@ -81,7 +81,7 @@
     <!-- Footer Bar -->
     <div class="footer-bar">
       <img src="@/assets/social/chas_logo.svg" class="logo" alt="ChasAcademy logo"/>
-      <p>@ChasAcademy FUX2025</p>
+      <p> &#169; ChasAcademy | FUX2025</p>  <!--&copy; 	COPYRIGHT HTML symbols-->
     </div>
   </footer>
 </template>
