@@ -2,8 +2,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import recipesData from '../data/recipes.json'
-import IngredientsComponent from '../components/IngredientsComponent.vue'
-import InstructionsComponent from '../components/InstructionsComponent.vue'
+import ChecklistComponent from '../components/ChecklistComponent.vue'
 
 const route = useRoute()
 const recipe = ref(null)
@@ -66,16 +65,20 @@ onMounted(() => {
     </div>
 
     <div class="recipe-content">
-      <IngredientsComponent 
-        :ingredients="recipe.ingredients"
-        :checked-ingredients="checkedIngredients"
-        @update:checked-ingredients="checkedIngredients = $event"
+      <ChecklistComponent 
+        :items="recipe.ingredients"
+        :checked-items="checkedIngredients"
+        title="Ingredients"
+        list-type="unordered"
+        @update:checked-items="checkedIngredients = $event"
       />
 
-      <InstructionsComponent 
-        :steps="recipe.steps"
-        :checked-steps="checkedSteps"
-        @update:checked-steps="checkedSteps = $event"
+      <ChecklistComponent 
+        :items="recipe.steps"
+        :checked-items="checkedSteps"
+        title="Instructions"
+        list-type="ordered"
+        @update:checked-items="checkedSteps = $event"
       />
     </div>
   </main>
@@ -130,6 +133,11 @@ onMounted(() => {
   color: var(--black-color);
   font-weight: 500;
 
+}
+
+.recipe-header, .recipe-content {
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .recipe-header {
