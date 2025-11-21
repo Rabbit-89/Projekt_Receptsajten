@@ -62,7 +62,6 @@ const categoryInfo = computed(() => {
 /* Header */
 .category-header {
   text-align: center;
-  margin-bottom: 30px;
   position: relative;
 }
 
@@ -83,6 +82,8 @@ const categoryInfo = computed(() => {
   font-size: 3rem;
   font-family: var(--font-secondary);
   margin-top: 10px;
+  margin-bottom: 0;
+  background-color: var(--white-color);
 }
 
 /* Recept-lista */
