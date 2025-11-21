@@ -1,5 +1,6 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+import recipesData from '@/data/recipes.json'; //import recipes
 
 const categories = ref([
   { id: 1, name: 'Breakfast', categorySlug: 'breakfast' },
@@ -7,13 +8,17 @@ const categories = ref([
   { id: 3, name: 'Dinner', categorySlug: 'dinner' },
   { id: 4, name: 'Dessert', categorySlug: 'dessert' },
 ]);
+
+//Simple total - the total number of objects/recipe objects in the recipes array
+const totalRecipes = recipesData.length; 
+
 </script>
 
 <template>
   <section class="category-box">
  <h1>Categories</h1>
     <div class="category-nav">
-      <router-link :to="{ name: 'home'}" :class="{ active: !$route.params.categoryId }">All Recipes</router-link>
+      <router-link :to="{ name: 'home'}" :class="{ active: !$route.params.categoryId }">All Recipes <div class="numberOfRecipes">{{ totalRecipes }}</div></router-link>
 
       <router-link v-for="category in categories" :key="category.id"
         :to="{ name: 'category', params: { categoryId: category.categorySlug } }">
@@ -21,14 +26,6 @@ const categories = ref([
         <div class="category-content">{{ category.name }}{{ category.categorySlug.length }}</div>
         </router-link>
     </div>
-
-    <!-- <ul class="list">
-        <li>Breakfast</li>
-        <li>Lunch</li>
-        <li>Dinner</li>
-        <li>Dessert</li>
-    </ul> -->
-
 
   </section>
 </template>
