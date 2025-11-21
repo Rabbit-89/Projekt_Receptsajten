@@ -37,6 +37,8 @@ main {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 20px;
+  padding: 40px;
+  background-color: var(--white-color);
 }
 
 /* Optional: add some padding to RecipeCard for mobile */

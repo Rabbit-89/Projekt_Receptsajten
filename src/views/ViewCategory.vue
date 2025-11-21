@@ -92,7 +92,8 @@ const categoryInfo = computed(() => {
   gap: 25px;
   max-width: 1400px;
   margin: auto;
-  padding-bottom: 40px;
+  padding: 40px;
+  background-color: var(--white-color);
 }
 
 /* No recipes */

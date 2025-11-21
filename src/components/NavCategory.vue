@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 import recipes from '../data/recipes.json';
-import CategoryComponent from './categoryComponent.vue'
+import CategoryComponent from './CategoryComponent.vue'
 
 // Skapa unika kategorier med count
 const categories = computed(() => {
@@ -44,14 +44,31 @@ const categories = computed(() => {
 
 <style scoped>
 .category-box {
-  background-color: #f7ce78;
+  background-color: var(--light-yellow-color);
   padding: 20px;
   width: 100%;
 }
 
 .category-nav {
   display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+/* Responsiv justeringar */
+@media screen and (max-width: 768px) {
+  .category-nav {
+  display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 18px;
+}
+}
+
+@media screen and (max-width: 480px) {
+  .category-nav {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
 }
 </style>
