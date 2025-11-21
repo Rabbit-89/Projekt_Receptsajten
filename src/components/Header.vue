@@ -1,17 +1,45 @@
 <script setup>
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
+import recipes from '../data/recipes.json';
 import Navigation from './Navigation.vue';
+import HeadImage from '@/assets/HeroImage2.png'
 
+const route = useRoute();
+
+// Hitta kategori-info och bild
+const categoryHeaderImage = computed(() => {
+  const slug = route.params.categoryId;
+
+  if (!slug) {
+    return null; // inte i kategori → använd default image
+  }
+
+  const recipe = recipes.find(r => r.categorySlug === slug);
+  return recipe ? recipe.categoryImage : null;
+});
 </script>
 
 <template>
-    <header class="hero">
-        <img class="hero-image" src="../assets/HeroImage2.png" alt="Delicious food" />
-        <Navigation />
-        <div class="hero-content">
-            <h1>Quick Recipes</h1>
-            <p>Where fast meets flavorful</p>
-        </div>
-    </header>
+  <header class="hero">
+    
+    <!-- Dynamiskt vald bild -->
+    <img
+      class="hero-image"
+      :src="categoryHeaderImage || HeadImage"
+      alt="Header image"
+    />
+
+    <Navigation />
+
+    <div class="hero-content">
+      <h1 v-if="!route.params.categoryId">Quick Recipes</h1>
+      <h1 v-else>{{ route.params.categoryId.toUpperCase() }}</h1>
+
+      <p v-if="!route.params.categoryId">Where fast meets flavorful</p>
+      <p v-else>Delicious {{ route.params.categoryId }} recipes</p>
+    </div>
+  </header>
 </template>
 
 <style scoped>
