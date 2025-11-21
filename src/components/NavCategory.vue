@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 import recipes from '../data/recipes.json';
-import CategoryComponent from './CategoryComponent.vue'
+import CategoryComponent from './categoryComponent.vue'
 
 // Skapa unika kategorier med count
 const categories = computed(() => {
