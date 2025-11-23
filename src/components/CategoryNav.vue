@@ -6,11 +6,32 @@ import lunchIcon from '@/assets/icon_lunch.svg';
 import dinnerIcon from '@/assets/icon_dinner.svg';
 import dessertIcon from '@/assets/icon_dessert.svg';
 
+
+// Simple counting - Method 1
+let breakfastCount = 0
+let lunchCount = 0  
+let dinnerCount = 0
+let dessertCount = 0
+
+for (let i = 0; i < recipesData.length; i++) {
+  const recipe = recipesData[i]
+  
+  if (recipe.categorySlug === 'breakfast') {
+    breakfastCount++
+  } else if (recipe.categorySlug === 'lunch') {
+    lunchCount++
+  } else if (recipe.categorySlug === 'dinner') {
+    dinnerCount++
+  } else if (recipe.categorySlug === 'dessert') {
+    dessertCount++
+  }
+}
+
 const categories = ref([
-  { id: 1, name: 'Breakfast', categorySlug: 'breakfast' },
-  { id: 2, name: 'Lunch', categorySlug: 'lunch' },
-  { id: 3, name: 'Dinner', categorySlug: 'dinner' },
-  { id: 4, name: 'Dessert', categorySlug: 'dessert' },
+  { id: 1, name: 'Breakfast', categorySlug: 'breakfast', recipeCount: breakfastCount},
+  { id: 2, name: 'Lunch', categorySlug: 'lunch', recipeCount: lunchCount },
+  { id: 3, name: 'Dinner', categorySlug: 'dinner', recipeCount: dinnerCount },
+  { id: 4, name: 'Dessert', categorySlug: 'dessert', recipeCount: dessertCount },
 ]);
 
 //Simple total - the total number of objects/recipe objects in the recipes array
@@ -26,6 +47,7 @@ function getCategoryIcon(categorySlug){
   return icons[categorySlug]
 }
 
+
 </script>
 
 <template>
@@ -35,7 +57,7 @@ function getCategoryIcon(categorySlug){
       <router-link :to="{ name: 'home'}" :class="{ active: !$route.params.categoryId }">
         <img src="../assets/icon_allRecipes.svg" alt="All Recipes Icon"></img>
         All Recipes
-         <div class="numberOfRecipes">{{ totalRecipes }}</div>
+         <div class="numberOfRecipes">{{ totalRecipes }} Recipes</div>
       </router-link>
 
       <router-link v-for="category in categories" :key="category.id"
@@ -44,7 +66,8 @@ function getCategoryIcon(categorySlug){
           <!--Different icons for each category-->
           <img :src="getCategoryIcon(category.categorySlug)" :alt="category.name"></img>
         </div>
-        <div class="category-content">{{ category.name }}{{ category.categorySlug.length }}</div>
+        <div class="category-content">{{ category.name }}</div>
+        <div class="recipeCount">{{ category.recipeCount }} Recipes</div>
         </router-link>
     </div>
 
@@ -53,6 +76,7 @@ function getCategoryIcon(categorySlug){
 
 <style scoped>
 h1{
+  display:flex;
  color: var(--color-black);
 font-family: Cormorant;
 font-size: 5rem;
@@ -61,21 +85,35 @@ font-weight: 500;
 line-height: normal;
 align-items: center;
 justify-content: center;
+padding: .5rem;
 }
 .category-box {
   width: 100%;
   height: auto;
   background-color: #f7ce78;
   margin: 20px 0;
+  padding:2rem;
 
 }
 
+.numberOfRecipes{
+  font-size: 1.5rem;
+  color:var(--dark-gray-color);
+  font-weight: 400;
+}
+
+.recipeCount {
+  font-size: 1.5rem;
+  color:var(--dark-gray-color);
+  font-weight: 400;
+}
 .category-nav {
   display: grid; /*displays the categories in 2 columns*/ 
   grid-template-columns: repeat(2, 1fr);
   justify-content: space-around;
   align-items: center;
   font-family: var(--font-main);
+  font-size: 1.5rem;
   height: 100%;
   list-style-type: none;
   padding: 0;
@@ -85,6 +123,7 @@ justify-content: center;
 .category-nav a {
   display: grid;
   text-decoration: none;
+  color:var(--color-black);
   font-family: 'Inter', sans-serif;
   font-size: 1.2em;
   flex-direction: column;
