@@ -87,6 +87,7 @@ align-items: center;
 justify-content: center;
 padding: .5rem;
 }
+
 .category-box {
   width: 100%;
   height: auto;
@@ -96,21 +97,18 @@ padding: .5rem;
 
 }
 
-.numberOfRecipes{
+.numberOfRecipes, .recipeCount {
   font-size: 1.5rem;
   color:var(--dark-gray-color);
   font-weight: 400;
+  margin-top: 0.5rem;
 }
 
-.recipeCount {
-  font-size: 1.5rem;
-  color:var(--dark-gray-color);
-  font-weight: 400;
-}
 .category-nav {
   display: grid; /*displays the categories in 2 columns*/ 
   grid-template-columns: repeat(2, 1fr);
-  justify-content: space-around;
+  gap:2rem; /*Add spacing between category cards*/ 
+  justify-content: center;
   align-items: center;
   font-family: var(--font-main);
   font-size: 1.5rem;
@@ -121,12 +119,21 @@ padding: .5rem;
 }
 
 .category-nav a {
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
   text-decoration: none;
   color:var(--color-black);
   font-family: 'Inter', sans-serif;
   font-size: 1.2em;
-  flex-direction: column;
+  padding:1.5rem;
+  transition: transform 0.2s ease;
+  min-width:150px;
+}
+.category-nav a:hover {
+  transform: translateY(-4px); /* Lift effect on hover */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
 @media screen and (min-width: 576px) {
