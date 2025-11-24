@@ -8,9 +8,9 @@ import Header from './components/Header.vue';
   <header>
 <Header/> 
   </header>
-<body>
+<main>
  <RouterView />
-</body>
+</main>
  
 </template>
 
@@ -25,6 +25,7 @@ body{
   color: #2c3e50;
   line-height: 1.6;
 }
+
 /* header {
   line-height: 1.5;
   max-height: 100vh;
@@ -86,4 +87,5 @@ nav a:first-of-type {
     margin-top: 1rem;
   }
 } */
+
 </style>
