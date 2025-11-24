@@ -22,7 +22,7 @@ for (let i = 0; i < recipesData.length; i++) {
     lunchCount++
   } else if (recipe.categorySlug === 'dinner') {
     dinnerCount++
-  } else if (recipe.categorySlug === 'dessert') {
+  } else if (recipe.categorySlug === 'desserts') {
     dessertCount++
   }
 }
@@ -31,7 +31,7 @@ const categories = ref([
   { id: 1, name: 'Breakfast', categorySlug: 'breakfast', recipeCount: breakfastCount},
   { id: 2, name: 'Lunch', categorySlug: 'lunch', recipeCount: lunchCount },
   { id: 3, name: 'Dinner', categorySlug: 'dinner', recipeCount: dinnerCount },
-  { id: 4, name: 'Dessert', categorySlug: 'dessert', recipeCount: dessertCount },
+  { id: 4, name: 'Desserts', categorySlug: 'desserts', recipeCount: dessertCount },
 ]);
 
 //Simple total - the total number of objects/recipe objects in the recipes array
@@ -42,7 +42,7 @@ function getCategoryIcon(categorySlug){
     breakfast: breakfastIcon,
     lunch: lunchIcon,
     dinner: dinnerIcon,
-    dessert: dessertIcon
+    desserts: dessertIcon
   }
   return icons[categorySlug]
 }
