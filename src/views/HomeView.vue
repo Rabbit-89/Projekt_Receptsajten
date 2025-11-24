@@ -1,19 +1,28 @@
 <script setup>
+import { ref, onMounted } from 'vue'
+import RecipeCard from '../components/RecipeCard.vue'
+import recipesData from '../data/recipes.json'
+import CategoryNav from '@/components/CategoryNav.vue';
 
+const recipes = ref([])
+
+onMounted(() => {
+  recipes.value = recipesData
+})
 </script>
 
 <template>
-  <div class="main">
-    <h1>This is an Home page</h1>
-  </div>
+  <main>
+    <CategoryNav/>
+    <div class="recipe-list">
+      <RecipeCard v-for="recipe in recipes" :key="recipe.id" :recipe="recipe" />
+    </div>
+  </main>
+
+ 
 </template>
 
-<style>
-@media (min-width: 1024px) {
-  .main {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-}
+
+<style scoped>
+
 </style>
