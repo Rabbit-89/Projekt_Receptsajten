@@ -20,7 +20,7 @@ onMounted(async () => {
   <main class="home-container">
     <CategoryNav />
 
-    <h1 class="page-title">Alla Recept</h1>
+    <h1 class="page-title">All Recipes</h1>
 
     <div class="recipe-grid"> 
     <RecipeCard 
