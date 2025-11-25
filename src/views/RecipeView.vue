@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
-import recipesData from '../data/recipes.json'
+import { fetchRecipeById } from '../services/api'
 import Checklist from '../components/Checklist.vue'
 import Breadcrumbs from '../components/Breadcrumbs.vue'
 import RecipeHeader from '../components/RecipeHeader.vue'
@@ -11,30 +11,44 @@ const recipe = ref(null)
 const checkedIngredients = ref(new Set())
 const checkedSteps = ref(new Set())
 
-const formatCategoryName = (slug) => {
-  return slug
-    .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ')
-}
-
 const categoryName = computed(() => {
-  if (!recipe.value) return ''
-  return formatCategoryName(recipe.value.categorySlug)
+  if (!recipe.value || !recipe.value.categories?.length) return ''
+  return recipe.value.categories[0]
+})
+
+const categorySlug = computed(() => {
+  if (!recipe.value || !recipe.value.categories?.length) return ''
+  return recipe.value.categories[0].toLowerCase()
 })
 
 const breadcrumbs = computed(() => {
   if (!recipe.value) return []
   return [
     { label: 'Home', to: '/' },
-    { label: categoryName.value, to: `/category/${recipe.value.categorySlug}` },
-    { label: recipe.value.name }
+    { label: categoryName.value, to: `/category/${categorySlug.value}` },
+    { label: recipe.value.title }
   ]
 })
 
-onMounted(() => {
-  const recipeId = parseInt(route.params.id)
-  recipe.value = recipesData.find(r => r.id === recipeId)
+const ingredientsCount = computed(() => recipe.value?.ingredients?.length || 0)
+const rating = computed(() => {
+  if (!recipe.value) return '0'
+  if (recipe.value.ratings?.length > 0) {
+    const avg = recipe.value.ratings.reduce((sum, r) => sum + (r.rating || 0), 0) / recipe.value.ratings.length
+    return avg.toFixed(1)
+  }
+  return '0'
+})
+const commentsCount = computed(() => recipe.value?.comments?.length || 0)
+
+onMounted(async () => {
+  const recipeId = route.params.id
+  try {
+    recipe.value = await fetchRecipeById(recipeId)
+  } catch (error) {
+    console.error('Failed to load recipe:', error)
+    recipe.value = null
+  }
 })
 </script>
 
@@ -43,18 +57,18 @@ onMounted(() => {
     <Breadcrumbs :items="breadcrumbs" />
 
     <RecipeHeader
-      :name="recipe.name"
-      :image="recipe.image"
-      :cooking-time="recipe.cookingTime"
-      :ingredients-count="recipe.ingredientsCount"
-      :rating="recipe.rating"
-      :comments-count="recipe.comments.length"
+      :name="recipe.title"
+      :image="recipe.imageUrl"
+      :cooking-time="recipe.timeInMins"
+      :ingredients-count="ingredientsCount"
+      :rating="rating"
+      :comments-count="commentsCount"
       :description="recipe.description"
     />
 
     <div class="recipe-content">
       <Checklist 
-        :items="recipe.ingredients"
+        :items="recipe.ingredients || []"
         :checked-items="checkedIngredients"
         title="Ingredients"
         list-type="unordered"
@@ -62,7 +76,7 @@ onMounted(() => {
       />
 
       <Checklist 
-        :items="recipe.steps"
+        :items="recipe.instructions || []"
         :checked-items="checkedSteps"
         title="Instructions"
         list-type="ordered"

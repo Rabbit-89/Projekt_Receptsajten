@@ -1,13 +1,18 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import RecipeCard from '../components/RecipeCard.vue'
-import recipesData from '../data/recipes.json'
+import { fetchRecipes } from '../services/api'
 import CategoryNav from '@/components/CategoryNav.vue';
 
 const recipes = ref([])
 
-onMounted(() => {
-  recipes.value = recipesData
+onMounted(async () => {
+  try {
+    recipes.value = await fetchRecipes()
+  } catch (error) {
+    console.error('Failed to load recipes:', error)
+    recipes.value = []
+  }
 })
 </script>
 
