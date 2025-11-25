@@ -27,7 +27,7 @@ const breadcrumbs = computed(() => {
   if (!recipe.value) return []
   return [
     { label: 'Home', to: '/' },
-    { label: categoryName.value, to: `/category/${recipe.value.categorySlug}` },
+    { label: categoryName.value, to: `/categories/${recipe.value.categorySlug}` },
     { label: recipe.value.name }
   ]
 })
