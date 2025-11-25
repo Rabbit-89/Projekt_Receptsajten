@@ -1,11 +1,21 @@
 <script setup>
+import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 
-defineProps({
+const props = defineProps({
     recipe: {
         type: Object,
         required: true
     }
+})
+
+const ingredientsCount = computed(() => props.recipe.ingredients?.length || 0)
+const rating = computed(() => {
+    if (props.recipe.ratings?.length > 0) {
+        const avg = props.recipe.ratings.reduce((sum, r) => sum + (r.rating || 0), 0) / props.recipe.ratings.length
+        return avg.toFixed(1)
+    }
+    return '0'
 })
 </script>
 
@@ -13,14 +23,14 @@ defineProps({
     <RouterLink :to="`/recipe/${recipe.id}`" class="recipe-card-link">
     <div class="recipe-card">
         <div class="recipe-image">
-            <img :src="recipe.image" :alt="recipe.name"/>
+            <img :src="recipe.imageUrl" :alt="recipe.title"/>
         </div>
         <div class="recipe-content">
-            <h2 class="recipe-title">{{ recipe.name }}</h2>
+            <h2 class="recipe-title">{{ recipe.title }}</h2>
             <div class="recipe-details">
-                <span class="recipe-detail-item"> <img src="@/assets/icons/time.svg" alt="Clock" /> {{ recipe.cookingTime }} min</span>
-                <span class="recipe-detail-item"> {{ recipe.ingredientsCount }} ingredients</span>
-                <span class="recipe-detail-item"> <img src="@/assets/icons/star.svg" alt="Star" /> {{ recipe.rating }}</span>
+                <span class="recipe-detail-item"> <img src="@/assets/icons/time.svg" alt="Clock" /> {{ recipe.timeInMins }} min</span>
+                <span class="recipe-detail-item"> {{ ingredientsCount }} ingredients</span>
+                <span class="recipe-detail-item"> <img src="@/assets/icons/star.svg" alt="Star" /> {{ rating }}</span>
             </div>
             <p class="recipe-description">{{ recipe.description }}</p>
         </div>
