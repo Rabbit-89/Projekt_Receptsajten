@@ -1,31 +1,33 @@
 <script setup>
 import { RouterLink } from 'vue-router'
+import Rating from './Rating.vue';
 
 defineProps({
-    recipe: {
-        type: Object,
-        required: true
-    }
+  recipe: {
+    type: Object,
+    required: true
+  }
 })
 </script>
 
 <template>
-    <RouterLink :to="`/recipe/${recipe.id}`" class="recipe-card-link">
+  <RouterLink :to="`/recipe/${recipe.id}`" class="recipe-card-link">
     <div class="recipe-card">
-        <div class="recipe-image">
-            <img :src="recipe.image" :alt="recipe.name"/>
+      <div class="recipe-image">
+        <img :src="recipe.image" :alt="recipe.name" />
+      </div>
+      <div class="recipe-content">
+        <h2 class="recipe-title">{{ recipe.name }}</h2>
+        <div class="recipe-details">
+          <span class="recipe-detail-item"> <img src="@/assets/icons/time.svg" alt="Clock" /> {{ recipe.cookingTime }}
+            min</span>
+          <span class="recipe-detail-item"> {{ recipe.ingredientsCount }} ingredients</span>
+          <span class="recipe-detail-item"> <img src="@/assets/icons/star.svg" alt="Star" /> {{ recipe.rating }}</span>
         </div>
-        <div class="recipe-content">
-            <h2 class="recipe-title">{{ recipe.name }}</h2>
-            <div class="recipe-details">
-                <span class="recipe-detail-item"> <img src="@/assets/icons/time.svg" alt="Clock" /> {{ recipe.cookingTime }} min</span>
-                <span class="recipe-detail-item"> {{ recipe.ingredientsCount }} ingredients</span>
-                <span class="recipe-detail-item"> <img src="@/assets/icons/star.svg" alt="Star" /> {{ recipe.rating }}</span>
-            </div>
-            <p class="recipe-description">{{ recipe.description }}</p>
-        </div>
+        <p class="recipe-description">{{ recipe.description }}</p>
+      </div>
     </div>
-    </RouterLink>
+  </RouterLink>
 </template>
 
 <style scoped>
@@ -97,9 +99,9 @@ defineProps({
 }
 
 .recipe-detail-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .recipe-description {
