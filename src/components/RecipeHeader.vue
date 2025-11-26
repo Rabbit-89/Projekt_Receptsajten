@@ -96,13 +96,13 @@ const props = defineProps({
 
 @media (min-width: 768px) {
   .recipe-image-container {
-    height: 400px;
+    height: 500px;
     order: 4;
     margin-top: 1rem;
   }
   
   .recipe-image {
-    height: 400px;
+    height: 500px;
     object-position: bottom;
   }
 }

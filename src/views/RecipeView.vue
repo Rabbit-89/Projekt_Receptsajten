@@ -1,3 +1,8 @@
+<!--
+  RecipeView Component
+  Displays the full details of a single recipe including ingredients, instructions,
+  rating and comments. (TBD: Add comments)
+-->
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
@@ -8,30 +13,36 @@ import RecipeHeader from '../components/RecipeHeader.vue'
 import Rating from '../components/Rating.vue'
 
 const route = useRoute()
-const recipe = ref(null)
-const checkedIngredients = ref(new Set())
-const checkedSteps = ref(new Set())
+const recipe = ref(null) // Stores the loaded recipe data
+const checkedIngredients = ref(new Set()) // Tracks which ingredients have been checked off
+const checkedSteps = ref(new Set()) // Tracks what cooking steps have been completed
 
+// Extract the category name from the recipe for breadcrumb navigation
 const categoryName = computed(() => {
   if (!recipe.value || !recipe.value.categories?.length) return ''
   return recipe.value.categories[0]
 })
 
+// Convert category name to a URL-friendly slug for routing
 const categorySlug = computed(() => {
   if (!recipe.value || !recipe.value.categories?.length) return ''
   return recipe.value.categories[0].toLowerCase()
 })
 
+// Build breadcrumb navigation items: Home -> Category -> Recipe
 const breadcrumbs = computed(() => {
   if (!recipe.value) return []
   return [
     { label: 'Home', to: '/' },
     { label: categoryName.value, to: `/categories/${categorySlug.value}` },
-    { label: recipe.value.title }
+    { label: recipe.value.title } // Current page, no link
   ]
 })
 
+// Calculate the total number of ingredients
 const ingredientsCount = computed(() => recipe.value?.ingredients?.length || 0)
+
+
 const rating = computed(() => {
   if (!recipe.value) return '0'
   if (recipe.value.ratings?.length > 0) {
@@ -40,26 +51,33 @@ const rating = computed(() => {
   }
   return '0'
 })
+
+// Count the total number of comments on this recipe
 const commentsCount = computed(() => recipe.value?.comments?.length || 0)
 
+// Load recipe data when component mounts
 onMounted(async () => {
   const recipeId = route.params.id
   try {
     recipe.value = await fetchRecipeById(recipeId)
   } catch (error) {
     console.error('Failed to load recipe:', error)
-    recipe.value = null
+    recipe.value = null // Set to null to show error state
   }
 })
+
 
 const currentRating = ref(0)
 const userHasRated = ref(false)
 </script>
 
 <template>
+  <!-- Main recipe view - only shown when recipe data is loaded -->
   <main class="recipe-view" v-if="recipe">
+    <!-- Navigation breadcrumbs -->
     <Breadcrumbs :items="breadcrumbs" />
 
+    <!-- Recipe header with image, title, and key stats -->
     <RecipeHeader
       :name="recipe.title"
       :image="recipe.imageUrl"
@@ -70,7 +88,9 @@ const userHasRated = ref(false)
       :description="recipe.description"
     />
 
+    <!-- Recipe content: ingredients and cooking instructions -->
     <div class="recipe-content">
+      <!-- Interactive ingredients checklist -->
       <Checklist 
         :items="recipe.ingredients || []"
         :checked-items="checkedIngredients"
@@ -79,6 +99,7 @@ const userHasRated = ref(false)
         @update:checked-items="checkedIngredients = $event"
       />
 
+      <!-- Interactive cooking steps checklist -->
       <Checklist 
         :items="recipe.instructions || []"
         :checked-items="checkedSteps"
@@ -88,9 +109,9 @@ const userHasRated = ref(false)
       />
     </div>
 
-<div class="rating-section">
+    <div class="rating-section">
       <h3>Did you enjoy cooking this meal?</h3>
-      
+
       <Rating 
         v-model="currentRating" 
         @update:modelValue="userHasRated = true"
@@ -106,9 +127,10 @@ const userHasRated = ref(false)
     </div>
   </main>
 
+  <!-- Error state: shown when recipe fails to load or doesn't exist -->
   <div v-else class="recipe-not-found">
     <h2>Recipe not found</h2>
-    <RouterLink to="/" class="breadcrumb-link">← Back to recipes</RouterLink>
+    <RouterLink to="/" class="back-link">← Back to recipes</RouterLink>
   </div>
 </template>
 
@@ -144,15 +166,14 @@ const userHasRated = ref(false)
   margin-bottom: 2rem;
 }
 
-.breadcrumb-link {
+.back-link {
   color: var(--black-color);
-  text-decoration: none;
+  text-decoration: underline;
   font-weight: 500;
   transition: color 0.2s ease;
-  text-decoration: underline;
 }
 
-.breadcrumb-link:hover {
+.back-link:hover {
   text-decoration: none;
 }
 
@@ -190,14 +211,14 @@ const userHasRated = ref(false)
   font-size: 0.9rem;
 }
 
-/* Mobilanpassning av stjärnorna för rating */
+
 @media (max-width: 600px) {
   .interactive-stars {
     font-size: 2rem; 
   }
 }
 
-/* Mobilanpassning av texterna över & under rating stjärnorna */
+
 .rating-section h3 {
     font-size: 1.4rem; 
     padding: 0 10px;   
