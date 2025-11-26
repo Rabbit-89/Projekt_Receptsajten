@@ -1,8 +1,14 @@
+<!--
+  RecipeCard Component
+  Displays a preview card for a recipe with image, title, description, and key details.
+  Clicking the card navigates to the full recipe view.
+-->
 <script setup>
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import Rating from './Rating.vue';
 
+// Props: recipe object containing all recipe information
 const props = defineProps({
     recipe: {
         type: Object,
@@ -10,7 +16,9 @@ const props = defineProps({
     }
 })
 
-const ingredientsCount = computed(() => props.recipe.ingredients?.length || 0)
+// Calculate the number of ingredients in the recipe
+const ingredientsCount = computed(() => props.recipe.ingredients?.length || 0);
+
 const rating = computed(() => {
     if (props.recipe.ratings?.length > 0) {
         const avg = props.recipe.ratings.reduce((sum, r) => sum + (r.rating || 0), 0) / props.recipe.ratings.length
@@ -21,6 +29,7 @@ const rating = computed(() => {
 </script>
 
 <template>
+  <!-- Clickable card that navigates to the full recipe view -->
   <RouterLink :to="`/recipe/${recipe.id}`" class="recipe-card-link">
     <div class="recipe-card">
         <div class="recipe-image">
