@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
+import Rating from './Rating.vue';
 
 const props = defineProps({
     recipe: {
@@ -20,7 +21,7 @@ const rating = computed(() => {
 </script>
 
 <template>
-    <RouterLink :to="`/recipe/${recipe.id}`" class="recipe-card-link">
+  <RouterLink :to="`/recipe/${recipe.id}`" class="recipe-card-link">
     <div class="recipe-card">
         <div class="recipe-image">
             <img :src="recipe.imageUrl" :alt="recipe.title"/>
@@ -35,7 +36,7 @@ const rating = computed(() => {
             <p class="recipe-description">{{ recipe.description }}</p>
         </div>
     </div>
-    </RouterLink>
+  </RouterLink>
 </template>
 
 <style scoped>
@@ -107,9 +108,9 @@ const rating = computed(() => {
 }
 
 .recipe-detail-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .recipe-description {
