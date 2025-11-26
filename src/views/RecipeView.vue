@@ -50,18 +50,10 @@ onMounted(async () => {
     console.error('Failed to load recipe:', error)
     recipe.value = null
   }
-    { label: categoryName.value, to: `/categories/${recipe.value.categorySlug}` },
-    { label: recipe.value.name }
-  ]
 })
 
 const currentRating = ref(0)
 const userHasRated = ref(false)
-
-onMounted(() => {
-  const recipeId = parseInt(route.params.id)
-  recipe.value = recipesData.find(r => r.id === recipeId)
-})
 </script>
 
 <template>
