@@ -35,9 +35,7 @@ const rating = computed(() => {
             </div>
             <p class="recipe-description">{{ recipe.description }}</p>
         </div>
-        <p class="recipe-description">{{ recipe.description }}</p>
       </div>
-    </div>
   </RouterLink>
 </template>
 
