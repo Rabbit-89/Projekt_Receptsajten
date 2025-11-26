@@ -5,6 +5,7 @@ import { fetchRecipeById } from '../services/api'
 import Checklist from '../components/Checklist.vue'
 import Breadcrumbs from '../components/Breadcrumbs.vue'
 import RecipeHeader from '../components/RecipeHeader.vue'
+import Rating from '../components/Rating.vue'
 
 const route = useRoute()
 const recipe = ref(null)
@@ -49,6 +50,17 @@ onMounted(async () => {
     console.error('Failed to load recipe:', error)
     recipe.value = null
   }
+    { label: categoryName.value, to: `/categories/${recipe.value.categorySlug}` },
+    { label: recipe.value.name }
+  ]
+})
+
+const currentRating = ref(0)
+const userHasRated = ref(false)
+
+onMounted(() => {
+  const recipeId = parseInt(route.params.id)
+  recipe.value = recipesData.find(r => r.id === recipeId)
 })
 </script>
 
@@ -82,6 +94,23 @@ onMounted(async () => {
         list-type="ordered"
         @update:checked-items="checkedSteps = $event"
       />
+    </div>
+
+<div class="rating-section">
+      <h3>Did you enjoy cooking this meal?</h3>
+      
+      <Rating 
+        v-model="currentRating" 
+        @update:modelValue="userHasRated = true"
+        class="interactive-stars"
+      />
+
+      <p v-if="userHasRated" class="thank-you-text">
+        Thanks! You have given this recipe a {{ currentRating }} star rating.
+      </p>
+      <p v-else class="help-text">
+        Please click on the stars to set your rating.
+      </p>
     </div>
   </main>
 
@@ -134,5 +163,65 @@ onMounted(async () => {
 .breadcrumb-link:hover {
   text-decoration: none;
 }
+
+.rating-section {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--grey-color);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.rating-section h3 {
+  font-family: var(--font-secondary); 
+  font-size: 1.8rem;
+  color: var(--black-color);
+  margin: 0;
+}
+
+.interactive-stars {
+  font-size: 2.5rem; 
+}
+
+.thank-you-text {
+  color: var(--gold-color); 
+  font-weight: bold;
+  font-family: var(--font-main);
+}
+
+.help-text {
+  color: var(--dark-gray-color);
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+/* Mobilanpassning av stjärnorna för rating */
+@media (max-width: 600px) {
+  .interactive-stars {
+    font-size: 2rem; 
+  }
+}
+
+/* Mobilanpassning av texterna över & under rating stjärnorna */
+.rating-section h3 {
+    font-size: 1.4rem; 
+    padding: 0 10px;   
+  }
+
+  .thank-you-text, 
+  .help-text {
+    font-size: 0.9rem; 
+    padding: 0 1rem;   
+    line-height: 1.4;  
+  }
+
+  .rating-section {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+  }
+
 </style>
 
