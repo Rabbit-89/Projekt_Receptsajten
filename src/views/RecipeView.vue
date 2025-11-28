@@ -4,71 +4,118 @@
   rating and comments. (TBD: Add comments)
 -->
 <script setup>
-import { ref, onMounted, computed } from 'vue'
-import { useRoute, RouterLink } from 'vue-router'
-import { fetchRecipeById } from '../services/api'
-import Checklist from '../components/Checklist.vue'
-import Breadcrumbs from '../components/Breadcrumbs.vue'
-import RecipeHeader from '../components/RecipeHeader.vue'
-import Rating from '../components/Rating.vue'
+import { ref, onMounted, computed } from "vue";
+import { useRoute, RouterLink } from "vue-router";
+import { fetchRecipeById } from "../services/api";
+import Checklist from "../components/Checklist.vue";
+import Breadcrumbs from "../components/Breadcrumbs.vue";
+import RecipeHeader from "../components/RecipeHeader.vue";
+import Rating from "../components/Rating.vue";
+//import Comment from '../components/Comment.vue'
 
-const route = useRoute()
-const recipe = ref(null) // Stores the loaded recipe data
-const checkedIngredients = ref(new Set()) // Tracks which ingredients have been checked off
-const checkedSteps = ref(new Set()) // Tracks what cooking steps have been completed
+// --- EXISTING LOGIC ---
+const route = useRoute();
+const recipe = ref(null);
+const checkedIngredients = ref(new Set());
+const checkedSteps = ref(new Set());
 
-// Extract the category name from the recipe for breadcrumb navigation
 const categoryName = computed(() => {
-  if (!recipe.value || !recipe.value.categories?.length) return ''
-  return recipe.value.categories[0]
-})
+  if (!recipe.value || !recipe.value.categories?.length) return "";
+  return recipe.value.categories[0];
+});
 
-// Convert category name to a URL-friendly slug for routing
 const categorySlug = computed(() => {
-  if (!recipe.value || !recipe.value.categories?.length) return ''
-  return recipe.value.categories[0].toLowerCase()
-})
+  if (!recipe.value || !recipe.value.categories?.length) return "";
+  return recipe.value.categories[0].toLowerCase();
+});
 
-// Build breadcrumb navigation items: Home -> Category -> Recipe
 const breadcrumbs = computed(() => {
-  if (!recipe.value) return []
+  if (!recipe.value) return [];
   return [
-    { label: 'Home', to: '/' },
+    { label: "Home", to: "/" },
     { label: categoryName.value, to: `/categories/${categorySlug.value}` },
-    { label: recipe.value.title } // Current page, no link
-  ]
-})
+    { label: recipe.value.title },
+  ];
+});
 
-// Calculate the total number of ingredients
-const ingredientsCount = computed(() => recipe.value?.ingredients?.length || 0)
-
+const ingredientsCount = computed(() => recipe.value?.ingredients?.length || 0);
 
 const rating = computed(() => {
-  if (!recipe.value) return '0'
+  if (!recipe.value) return "0";
   if (recipe.value.ratings?.length > 0) {
-    const avg = recipe.value.ratings.reduce((sum, r) => sum + (r.rating || 0), 0) / recipe.value.ratings.length
-    return avg.toFixed(1)
+    const avg =
+      recipe.value.ratings.reduce((sum, r) => sum + (r.rating || 0), 0) /
+      recipe.value.ratings.length;
+    return avg.toFixed(1);
   }
-  return '0'
-})
+  return "0";
+});
 
-// Count the total number of comments on this recipe
-const commentsCount = computed(() => recipe.value?.comments?.length || 0)
+const commentsCount = computed(() => recipe.value?.comments?.length || 0);
 
-// Load recipe data when component mounts
 onMounted(async () => {
-  const recipeId = route.params.id
+  const recipeId = route.params.id;
   try {
-    recipe.value = await fetchRecipeById(recipeId)
+    recipe.value = await fetchRecipeById(recipeId);
+    if (!recipe.value.comments) recipe.value.comments = [];
   } catch (error) {
-    console.error('Failed to load recipe:', error)
-    recipe.value = null // Set to null to show error state
+    console.error("Failed to load recipe:", error);
+    recipe.value = null;
   }
-})
+});
 
+const currentRating = ref(0);
+const userHasRated = ref(false);
 
-const currentRating = ref(0)
-const userHasRated = ref(false)
+// --- NEW COMMENT  ---
+const newName = ref("");
+const newEmail = ref("");
+const newText = ref("");
+const thanks = ref(false);
+
+const addComment = () => {
+  const name = newName.value.trim();
+  const email = newEmail.value.trim();
+  const text = newText.value.trim();
+
+  // --- Validate required fields ---
+  if (!name || !text) {
+    alert("Please fill in the required fields: Name and Comment");
+    return;
+  }
+
+  // --- Validate email format if filled ---
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (email && !emailPattern.test(email)) {
+    alert("Please enter a valid email (example: ss@jj.se)");
+    return;
+  }
+
+  // --- Create new comment object ---
+  const newComment = {
+    author: name,
+    email: email,
+    text: text,
+    date: new Date().toISOString(),
+    replies: [],
+  };
+
+  // --- Add to recipe comments ---
+  if (!recipe.value.comments) recipe.value.comments = [];
+  recipe.value.comments.push(newComment);
+  console.log(recipe.value.comments);
+
+  // --- Reset form fields ---
+  newName.value = "";
+  newEmail.value = "";
+  newText.value = "";
+
+  // --- Show thank you message ---
+  thanks.value = true;
+  setTimeout(() => {
+    thanks.value = false;
+  }, 3000);
+};
 </script>
 
 <template>
@@ -91,7 +138,7 @@ const userHasRated = ref(false)
     <!-- Recipe content: ingredients and cooking instructions -->
     <div class="recipe-content">
       <!-- Interactive ingredients checklist -->
-      <Checklist 
+      <Checklist
         :items="recipe.ingredients || []"
         :checked-items="checkedIngredients"
         title="Ingredients"
@@ -100,7 +147,7 @@ const userHasRated = ref(false)
       />
 
       <!-- Interactive cooking steps checklist -->
-      <Checklist 
+      <Checklist
         :items="recipe.instructions || []"
         :checked-items="checkedSteps"
         title="Instructions"
@@ -112,8 +159,8 @@ const userHasRated = ref(false)
     <div class="rating-section">
       <h3>Did you enjoy cooking this meal?</h3>
 
-      <Rating 
-        v-model="currentRating" 
+      <Rating
+        v-model="currentRating"
         @update:modelValue="userHasRated = true"
         class="interactive-stars"
       />
@@ -124,6 +171,52 @@ const userHasRated = ref(false)
       <p v-else class="help-text">
         Please click on the stars to set your rating.
       </p>
+    </div>
+
+    <!-- COMMENT FORM -->
+    <div class="add-comment">
+      <h3>Leave a comment</h3>
+      <label style="display: flex; flex-direction: row">
+        Name
+        <span style="color: darkred; font-weight: bold; margin-left: 0.5rem">
+          *
+        </span
+        >
+      </label>
+      <input v-model="newName" type="text" placeholder="Type your name" />
+
+      <label>
+        Email
+        <input v-model="newEmail" type="email" placeholder="Type your email" />
+      </label>
+      <label style="display: flex; flex-direction: row">
+        Comment
+        <span style="color: darkred; font-weight: bold; margin-left: 0.5rem">
+          *
+        </span
+        >
+      </label>
+      <textarea
+        v-model="newText"
+        rows="4"
+        placeholder="Type your comment"
+      ></textarea>
+
+      <button @click="addComment">Send Comment</button>
+
+      <p v-if="thanks" class="thanks-text">Thanks for your comment!</p>
+    </div>
+
+    <!-- COMMENTS LIST -->
+    <div class="comments-wrapper">
+      <h3>{{ commentsCount }} Comments</h3>
+      <hr />
+      <!--Efter fix Comment.vue import och skriva den för CommentsList vissa--
+      <Comment 
+        v-for="(c, index) in recipe.comments"
+        :key="index"
+        :comment="c"
+      /> -->
     </div>
   </main>
 
@@ -189,18 +282,19 @@ const userHasRated = ref(false)
 }
 
 .rating-section h3 {
-  font-family: var(--font-secondary); 
+  font-family: var(--font-secondary);
   font-size: 1.8rem;
   color: var(--black-color);
   margin: 0;
 }
 
 .interactive-stars {
-  font-size: 2.5rem; 
+  font-size: 2.5rem;
 }
 
-.thank-you-text {
-  color: var(--gold-color); 
+.thank-you-text,
+.thanks-text {
+  color: var(--gold-color);
   font-weight: bold;
   font-family: var(--font-main);
 }
@@ -211,30 +305,88 @@ const userHasRated = ref(false)
   font-size: 0.9rem;
 }
 
-
 @media (max-width: 600px) {
   .interactive-stars {
-    font-size: 2rem; 
+    font-size: 2rem;
   }
 }
 
-
 .rating-section h3 {
-    font-size: 1.4rem; 
-    padding: 0 10px;   
-  }
+  font-size: 1.4rem;
+  padding: 0 10px;
+}
 
-  .thank-you-text, 
-  .help-text {
-    font-size: 0.9rem; 
-    padding: 0 1rem;   
-    line-height: 1.4;  
-  }
+.thank-you-text,
+.help-text,
+.thanks-text {
+  font-size: 0.9rem;
+  padding: 0 1rem;
+  line-height: 1.4;
+}
 
-  .rating-section {
-    margin-top: 2rem;
-    padding-top: 1.5rem;
-  }
+.rating-section {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+}
+.add-comment h3,
+.comments-wrapper h3 {
+  font-family: var(--font-secondary);
+  font-size: 1.8rem;
+  color: var(--black-color);
+  margin: 0;
+}
+.comments-wrapper {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  background: #ffffff; /* ljus bakgrund */
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 1rem;
+}
 
+.add-comment {
+  margin-top: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.add-comment label {
+  font-family: var(--font-secondary);
+  display: flex;
+  flex-direction: column;
+  font-weight: 500;
+}
+
+.add-comment input,
+.add-comment textarea {
+  margin-top: 0.3rem;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-family: var(--font-main);
+}
+
+.add-comment button {
+  align-self: flex-start;
+  padding: 7px 24px;
+  background: #573311;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+.add-comment button:hover {
+  border: 2px solid #f9ae4a;
+  background-color: var(--brown-color);
+  color: white;
+}
 </style>
-
