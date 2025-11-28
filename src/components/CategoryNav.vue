@@ -91,7 +91,7 @@ padding: .5rem;
 .category-box {
   width: 100%;
   height: auto;
-  background-color: #f7ce78;
+  background-color: var(--light-yellow-color);
   margin: 20px 0;
   padding:2rem;
 

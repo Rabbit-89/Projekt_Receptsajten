@@ -12,11 +12,7 @@ import { RouterLink } from 'vue-router'
     <div class="nav-link">
       <RouterLink to="/">Home</RouterLink>
 
-      <!-- <ul class="burger-items">
-<li><RouterLink to="/">Home</RouterLink></li>
-        <li><RouterLink to="/categories">Categories</RouterLink></li>
-        
-    </ul> -->
+    
     </div>
 
 
@@ -86,9 +82,23 @@ import { RouterLink } from 'vue-router'
 .nav-link a {
 
   display: inline-block;
+  text-decoration: none;
+  font-family: var(--font-main);
+  font-size: 1.25rem;
   padding: 0 1rem;
   border-left: 1px solid rgba(255, 255, 255, 0.12);
   color: #ffffff;
+}
+
+.nav-link a:hover {
+
+  display: inline-block;
+  text-decoration: none;
+  font-family: var(--font-main);
+  font-size: 1.25rem;
+  padding: 0 1rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--orange-color);
 }
 
 nav a:first-of-type {
