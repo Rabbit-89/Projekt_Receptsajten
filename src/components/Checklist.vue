@@ -30,6 +30,19 @@ const toggleItem = (index) => {
   }
   emit('update:checkedItems', newSet)
 }
+
+const formatItem = (item) => {
+  // If item is an object with amount, unit, and name
+  if (typeof item === 'object' && item !== null && item.amount !== undefined) {
+    const parts = []
+    if (item.amount) parts.push(item.amount)
+    if (item.unit) parts.push(item.unit)
+    if (item.name) parts.push(item.name)
+    return parts.join(' ')
+  }
+  // Otherwise, treat as string
+  return item
+}
 </script>
 
 <template>
@@ -52,7 +65,7 @@ const toggleItem = (index) => {
             @change="toggleItem(index)"
             class="checkbox-input"
           />
-          <span class="checkbox-text">{{ item }}</span>
+          <span class="checkbox-text">{{ formatItem(item) }}</span>
         </label>
       </li>
     </component>

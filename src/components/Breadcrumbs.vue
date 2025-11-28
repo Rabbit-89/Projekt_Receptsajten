@@ -1,5 +1,9 @@
+<!--
+  Breadcrumbs Component
+  Displays navigation breadcrumbs with clickable links and separators.
+  Receives an array of breadcrumb items with 'label' and optional 'to' properties.
+-->
 <script setup>
-import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 
 const props = defineProps({
@@ -8,13 +12,6 @@ const props = defineProps({
     required: true
   }
 })
-
-const formatCategoryName = (slug) => {
-  return slug
-    .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ')
-}
 </script>
 
 <template>
