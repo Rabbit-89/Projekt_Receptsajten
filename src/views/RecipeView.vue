@@ -11,7 +11,7 @@ import Checklist from "../components/Checklist.vue";
 import Breadcrumbs from "../components/Breadcrumbs.vue";
 import RecipeHeader from "../components/RecipeHeader.vue";
 import Rating from "../components/Rating.vue";
-//import Comment from '../components/Comment.vue'
+import Comment from '../components/Comment.vue'
 
 // --- EXISTING LOGIC ---
 const route = useRoute();
@@ -211,12 +211,11 @@ const addComment = () => {
     <div class="comments-wrapper">
       <h3>{{ commentsCount }} Comments</h3>
       <hr />
-      <!--Efter fix Comment.vue import och skriva den för CommentsList vissa--
       <Comment 
         v-for="(c, index) in recipe.comments"
         :key="index"
         :comment="c"
-      /> -->
+      />
     </div>
   </main>
 
