@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { fetchRecipes, fetchCategories } from '@/services/api';
 import { useRoute } from 'vue-router';
 import breakfastIcon from '@/assets/icon_breakfast.svg';
@@ -12,95 +12,140 @@ const recipes = ref([])
 const categoriesData = ref([])
 const route = useRoute();
 
-onMounted(async() => {
-  try {
-    recipes.value= await fetchRecipes();
-    categoriesData.value = await fetchCategories();
-  } catch (error) {
-    console.error('Failed to load data:', error);
-    recipes.value = [];
-    categoriesData.value = [];
+// Step-1 : Use COMPUTED properties to react to API data changes
+const processedCategories = computed(() => {
+  if (!recipes.value.length || !categoriesData.value.length) {
+    return []; //return an empty array if there is no data
+
   }
+  // Step 2: Process categories to include recipe counts
+  return categoriesData.value.map(category => {
+    //Count recipes in this category
+    const recipeCount = recipes.value.filter(recipe => {
+      return recipe.categoryItems.includes(category.slug);
+    }).length;
+
+    return {
+      id: category.id,
+      name: category.name,
+      categoriesData: category.slug,
+      recipeCount: recipeCount.length,
+      //Icon for every category is added dynamically here, based on the category slug
+      icon: getCategoryIcon(category.slug)
+    }
+  })
 });
 
-// Simple counting - Method 1
-let breakfastCount = 0
-let lunchCount = 0  
-let dinnerCount = 0
-let dessertCount = 0
+//Defining main categories for counting
+const mainCategories = ['Breakfast', 'Lunch', 'Dinner', 'Desserts'];
 
-for (let i = 0; i < recipes.value.length; i++) {
-  const recipe = recipes.value[i]
-  
-  if (recipe.categoriesData[i] === 'breakfast') {
-    breakfastCount++
-  } else if (recipe.categoriesData[i] === 'lunch') {
-    lunchCount++
-  } else if (recipe.categoriesData[i] === 'dinner') {
-    dinnerCount++
-  } else if (recipe.categoriesData[i] === 'desserts') {
-    dessertCount++
-  }
-}
+// Compute recipe counts for each main category
+const categoryCounts = computed(() => {
+  const counts = {
+    Breakfast: 0,
+    Lunch: 0,
+    Dinner: 0,
+    Desserts: 0
+  };
 
-const categories = ref([
-  { id: 1, name: 'Breakfast', categoriesData: 'breakfast', recipeCount: breakfastCount},
-  { id: 2, name: 'Lunch', categoriesData: 'lunch', recipeCount: lunchCount },
-  { id: 3, name: 'Dinner', categoriesData: 'dinner', recipeCount: dinnerCount },
-  { id: 4, name: 'Desserts', categoriesData: 'desserts', recipeCount: dessertCount },
-]);
+  recipes.value.forEach(recipe => {
+    //this loop runs through each recipe and checks its categoriesData array
+      if (recipe.categories && Array.isArray(recipe.categories)) 
+      //this runs only if the recipe has a categories array
+      {
+        recipe.categories.forEach(category => {
+          //this loop runs through each category of the recipe
+          if (mainCategories.includes(category)) {
+            counts[category]++;
+          }
+        });
+      }
+  });
+   return counts;
+});
+
+  console.log('Category Counts:', categoryCounts.value);
+
+//use computed to create categories array with recipe counts
+  const categories = computed(() => [
+    { id:1, name:'Breakfast', categoriesData:'Breakfast', recipeCount: categoryCounts.value.Breakfast, icon: breakfastIcon},
+    { id:2, name:'Lunch', categoriesData:'Lunch', recipeCount: categoryCounts.value.Lunch, icon: lunchIcon},
+    { id:3, name:'Dinner', categoriesData:'Dinner', recipeCount: categoryCounts.value.Dinner, icon: dinnerIcon},
+    { id:4, name:'Desserts', categoriesData:'Desserts', recipeCount: categoryCounts.value.Desserts, icon: dessertIcon},
+  ])
 
 //Simple total - the total number of objects/recipe objects in the recipes array
-const totalRecipes = recipes.value.length; 
-function getCategoryIcon(categoriesData){
-  const icons ={
+const totalRecipes = computed(() => recipes.value.length);
+
+//Icon function based on category slug
+function getCategoryIcon(categoriesData) {
+  const icons = {
     breakfast: breakfastIcon,
     lunch: lunchIcon,
     dinner: dinnerIcon,
     desserts: dessertIcon
   }
-  return icons[categoriesData]
+  return icons[categoriesData] || breakfastIcon; //default icon, if there is a new category added without an icon
 }
+
+const loadRecipes = async () => {
+  try {
+    recipes.value = await fetchRecipes()
+    categoriesData.value = await fetchCategories()
+
+    console.log('Fetched recipes:', recipes.value)
+    console.log('Fetched categories:', categoriesData.value)
+  } catch (error) {
+    console.error('Failed to load data:', error)
+    recipes.value = []
+    categoriesData.value = []
+  }
+}
+
+
+onMounted(() => {
+  loadRecipes();
+});
 
 
 </script>
 
 <template>
   <section class="category-box">
- <h1>Categories</h1>
+    <h1>Categories</h1>
     <div class="category-nav">
-      <router-link :to="{ name: 'home'}" :class="{ active: !$route.params.categoryId }">
+      <router-link :to="{ name: 'home' }" :class="{ active: !$route.params.categoryId }">
         <img src="../assets/icon_allRecipes.svg" alt="All Recipes Icon"></img>
         All Recipes
-         <div class="numberOfRecipes">{{ totalRecipes }} Recipes</div>
+        <div class="numberOfRecipes">{{ totalRecipes }} Recipes</div>
       </router-link>
 
       <router-link v-for="category in categories" :key="category.id"
         :to="{ name: 'category', params: { categoryId: category.categoriesData } }">
-        <div class="category-icon"> 
+        <div class="category-icon">
           <!--Different icons for each category-->
           <img :src="getCategoryIcon(category.categoriesData)" :alt="category.name"></img>
         </div>
         <div class="category-content">{{ category.name }}</div>
         <div class="recipeCount">{{ category.recipeCount }} Recipes</div>
-        </router-link>
+      </router-link>
     </div>
 
   </section>
 </template>
 
 <style scoped>
-h1{
-  display:flex;
- color: var(--color-black);
-font-family: Cormorant;
-font-size: 5rem;
-font-style: normal;
-font-weight: 500;
-line-height: normal;
-align-items: center;
-justify-content: center;
-padding: .5rem;
+h1 {
+  display: flex;
+  color: var(--color-black);
+  font-family: Cormorant;
+  font-size: 5rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  align-items: center;
+  justify-content: center;
+  padding: .5rem;
 }
 
 .category-box {
@@ -108,21 +153,24 @@ padding: .5rem;
   height: auto;
   background-color: var(--light-yellow-color);
   margin: 20px 0;
-  padding:2rem;
+  padding: 2rem;
 
 }
 
-.numberOfRecipes, .recipeCount {
+.numberOfRecipes,
+.recipeCount {
   font-size: 1.5rem;
-  color:var(--dark-gray-color);
+  color: var(--dark-gray-color);
   font-weight: 400;
   margin-top: 0.5rem;
 }
 
 .category-nav {
-  display: grid; /*displays the categories in 2 columns*/ 
+  display: grid;
+  /*displays the categories in 2 columns*/
   grid-template-columns: repeat(2, 1fr);
-  gap:2rem; /*Add spacing between category cards*/ 
+  gap: 2rem;
+  /*Add spacing between category cards*/
   justify-content: center;
   align-items: center;
   font-family: var(--font-main);
@@ -139,42 +187,49 @@ padding: .5rem;
   align-items: center;
   text-align: center;
   text-decoration: none;
-  color:var(--color-black);
+  color: var(--color-black);
   font-family: 'Inter', sans-serif;
   font-size: 1.2em;
-  padding:1.5rem;
+  padding: 1.5rem;
   transition: transform 0.2s ease;
-  min-width:150px;
+  min-width: 150px;
 }
+
 .category-nav a:hover {
-  transform: translateY(-4px); /* Lift effect on hover */
+  transform: translateY(-4px);
+  /* Lift effect on hover */
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
 @media screen and (min-width: 576px) {
+
   /* ... */
-  .category-nav{
-    display:grid;
+  .category-nav {
+    display: grid;
     grid-template-columns: repeat(2, 1fr);
   }
 
-  
+
 }
 
 /* Styles for medium screens (e.g., laptops) */
 @media screen and (min-width: 768px) {
+
   /* ... */
-  .category-nav{
-    display:flex;/*displays the categories in a row*/ 
+  .category-nav {
+    display: flex;
+    /*displays the categories in a row*/
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 /* Styles for large screens */
 @media screen and (min-width: 1200px) {
+
   /* ... */
-   .category-nav{
-    display:flex;/*displays the categories in a row*/ 
+  .category-nav {
+    display: flex;
+    /*displays the categories in a row*/
     grid-template-columns: repeat(2, 1fr);
   }
 }
