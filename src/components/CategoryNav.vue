@@ -12,29 +12,6 @@ const recipes = ref([])
 const categoriesData = ref([])
 const route = useRoute();
 
-// Step-1 : Use COMPUTED properties to react to API data changes
-const processedCategories = computed(() => {
-  if (!recipes.value.length || !categoriesData.value.length) {
-    return []; //return an empty array if there is no data
-
-  }
-  // Step 2: Process categories to include recipe counts
-  return categoriesData.value.map(category => {
-    //Count recipes in this category
-    const recipeCount = recipes.value.filter(recipe => {
-      return recipe.categoryItems.includes(category.slug);
-    }).length;
-
-    return {
-      id: category.id,
-      name: category.name,
-      categoriesData: category.slug,
-      recipeCount: recipeCount.length,
-      //Icon for every category is added dynamically here, based on the category slug
-      icon: getCategoryIcon(category.slug)
-    }
-  })
-});
 
 //Defining main categories for counting
 const mainCategories = ['Breakfast', 'Lunch', 'Dinner', 'Desserts'];
