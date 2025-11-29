@@ -1,11 +1,27 @@
 <script setup>
-import { ref, computed } from 'vue';
-import recipesData from '@/data/recipes.json'; //import recipes
+import { ref, onMounted } from 'vue';
+import { fetchRecipes, fetchCategories } from '@/services/api';
+import { useRoute } from 'vue-router';
 import breakfastIcon from '@/assets/icon_breakfast.svg';
 import lunchIcon from '@/assets/icon_lunch.svg';
 import dinnerIcon from '@/assets/icon_dinner.svg';
 import dessertIcon from '@/assets/icon_dessert.svg';
 
+
+const recipes = ref([])
+const categoriesData = ref([])
+const route = useRoute();
+
+onMounted(async() => {
+  try {
+    recipes.value= await fetchRecipes();
+    categoriesData.value = await fetchCategories();
+  } catch (error) {
+    console.error('Failed to load data:', error);
+    recipes.value = [];
+    categoriesData.value = [];
+  }
+});
 
 // Simple counting - Method 1
 let breakfastCount = 0
@@ -13,38 +29,37 @@ let lunchCount = 0
 let dinnerCount = 0
 let dessertCount = 0
 
-for (let i = 0; i < recipesData.length; i++) {
-  const recipe = recipesData[i]
+for (let i = 0; i < recipes.value.length; i++) {
+  const recipe = recipes.value[i]
   
-  if (recipe.categorySlug === 'breakfast') {
+  if (recipe.categoriesData[i] === 'breakfast') {
     breakfastCount++
-  } else if (recipe.categorySlug === 'lunch') {
+  } else if (recipe.categoriesData[i] === 'lunch') {
     lunchCount++
-  } else if (recipe.categorySlug === 'dinner') {
+  } else if (recipe.categoriesData[i] === 'dinner') {
     dinnerCount++
-  } else if (recipe.categorySlug === 'desserts') {
+  } else if (recipe.categoriesData[i] === 'desserts') {
     dessertCount++
   }
 }
 
 const categories = ref([
-  { id: 1, name: 'Breakfast', categorySlug: 'breakfast', recipeCount: breakfastCount},
-  { id: 2, name: 'Lunch', categorySlug: 'lunch', recipeCount: lunchCount },
-  { id: 3, name: 'Dinner', categorySlug: 'dinner', recipeCount: dinnerCount },
-  { id: 4, name: 'Desserts', categorySlug: 'desserts', recipeCount: dessertCount },
+  { id: 1, name: 'Breakfast', categoriesData: 'breakfast', recipeCount: breakfastCount},
+  { id: 2, name: 'Lunch', categoriesData: 'lunch', recipeCount: lunchCount },
+  { id: 3, name: 'Dinner', categoriesData: 'dinner', recipeCount: dinnerCount },
+  { id: 4, name: 'Desserts', categoriesData: 'desserts', recipeCount: dessertCount },
 ]);
 
 //Simple total - the total number of objects/recipe objects in the recipes array
-const totalRecipes = recipesData.length; 
-
-function getCategoryIcon(categorySlug){
+const totalRecipes = recipes.value.length; 
+function getCategoryIcon(categoriesData){
   const icons ={
     breakfast: breakfastIcon,
     lunch: lunchIcon,
     dinner: dinnerIcon,
     desserts: dessertIcon
   }
-  return icons[categorySlug]
+  return icons[categoriesData]
 }
 
 
@@ -61,10 +76,10 @@ function getCategoryIcon(categorySlug){
       </router-link>
 
       <router-link v-for="category in categories" :key="category.id"
-        :to="{ name: 'category', params: { categoryId: category.categorySlug } }">
+        :to="{ name: 'category', params: { categoryId: category.categoriesData } }">
         <div class="category-icon"> 
           <!--Different icons for each category-->
-          <img :src="getCategoryIcon(category.categorySlug)" :alt="category.name"></img>
+          <img :src="getCategoryIcon(category.categoriesData)" :alt="category.name"></img>
         </div>
         <div class="category-content">{{ category.name }}</div>
         <div class="recipeCount">{{ category.recipeCount }} Recipes</div>
