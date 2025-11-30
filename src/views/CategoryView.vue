@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 import RecipeCard from '../components/RecipeCard.vue'
 import recipesData from '../data/recipes.json'
 import CategoryNav from '@/components/CategoryNav.vue';
+import SearchBar from '@/components/SearchBar.vue';
 
 const route = useRoute()
 const recipes = ref([])
@@ -45,6 +46,7 @@ onMounted(() => {
       <p>Inga recept hittades i kategorin "{{ displayTitle }}".</p>
     </div>
   </main>
+  <SearchBar />
 </template>
 
 <style scoped>
