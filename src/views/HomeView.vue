@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import RecipeCard from '../components/RecipeCard.vue'
 import { fetchRecipes } from '../services/api'
 import CategoryNav from '@/components/CategoryNav.vue';
+import SearchBar from '@/components/SearchBar.vue';
 
 const recipes = ref([])
 
@@ -18,10 +19,13 @@ onMounted(async () => {
 
 <template>
   <main class="home-container">
+
     <CategoryNav />
 
     <h1 class="page-title">All Recipes</h1>
 
+        <SearchBar />
+        
     <div class="recipe-grid"> 
     <RecipeCard 
       v-for="recipe in recipes" 
@@ -30,6 +34,9 @@ onMounted(async () => {
       />
     </div>
   </main>
+
+  
+
 </template>
 
 
