@@ -20,11 +20,18 @@ const props = defineProps({
       <RouterLink 
         v-if="item.to" 
         :to="item.to" 
+        :aria-current="index === items.length - 1 ? 'page' : undefined"
         class="breadcrumb-link"
       >
         {{ item.label }}
       </RouterLink>
-      <span v-else class="breadcrumb-current">{{ item.label }}</span>
+      <span 
+        v-else 
+        class="breadcrumb-current"
+        :aria-current="index === items.length - 1 ? 'page' : undefined"
+      >
+        {{ item.label }}
+      </span>
       <span 
         v-if="index < items.length - 1" 
         class="breadcrumb-separator"
