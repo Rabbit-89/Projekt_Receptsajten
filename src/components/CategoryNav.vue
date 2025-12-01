@@ -87,14 +87,14 @@ onMounted(() => {
   <section class="category-box">
     <h1>Categories</h1>
     <div class="category-nav">
-      <router-link :to="{ name: 'home' }" :class="{ active: !$route.params.categoryId }">
+      <router-link :to="{ name: 'home' }" :class="{ active: !$route.params.categoryId }" :aria-current="$route.name === 'home' ? 'page':undefined ">
         <img src="../assets/icon_allRecipes.svg" alt="All Recipes Icon"></img>
         All Recipes
         <div class="numberOfRecipes">{{ totalRecipes }} Recipes</div>
       </router-link>
 
       <router-link v-for="category in categories" :key="category.id"
-        :to="{ name: 'category', params: { categoryId: category.categoriesData } }">
+        :to="{ name: 'category', params: { categoryId: category.categoriesData } }" :aria-current="$route.params.categoryId === category.categoriesData ? 'page':undefined ">
         <div class="category-icon">
           <!--Different icons for each category-->
           <img :src="getCategoryIcon(category.categoriesData)" :alt="category.name"></img>
