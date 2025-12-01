@@ -2,7 +2,8 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import RecipeCard from '../components/RecipeCard.vue'
-import recipesData from '../data/recipes.json'
+// import recipesData from '../data/recipes.json'
+import { fetchRecipes } from '@/services/api';
 import CategoryNav from '@/components/CategoryNav.vue';
 
 const route = useRoute()
@@ -12,8 +13,8 @@ const currentCategorySlug = computed(() => route.params.categoryId)
 
 const filteredRecipes = computed(() => {
   return recipes.value.filter(recipe => {
-    
-    return recipe.categorySlug === currentCategorySlug.value
+    // Check if the recipe's categories include the current category slug
+    return recipe.categories.includes(currentCategorySlug.value)
   })
 })
 
@@ -22,8 +23,10 @@ const displayTitle = computed(() => {
   return currentCategorySlug.value.charAt(0).toUpperCase() + currentCategorySlug.value.slice(1)
 })
 
-onMounted(() => {
-  recipes.value = recipesData
+
+onMounted(async () => {
+  // Fetch recipes from the API service
+  recipes.value = await fetchRecipes()
 })
 </script>
 
