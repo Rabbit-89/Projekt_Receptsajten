@@ -10,16 +10,17 @@
     <div class="footer-content">
       
       <h2 class="title">
-        About Us
+        About
       </h2>
 
       <p class="text">
-        We help you find inspiration in the kitchen — whether you're starting
-        the day with an energizing breakfast, preparing a quick lunch, cooking
-        a comforting dinner, or finishing with a delicious dessert. Our goal is
-        to make cooking easier, more enjoyable, and accessible for everyone.
-        Explore our recipes, discover new favorites, and let the joy of food
-        become a natural part of your everyday life.
+        We help you discover the endless possibilities of your rice cooker, 
+        from perfectly fluffy rice and hearty one-pot meals to surprising 
+        desserts and breakfast dishes. Our goal is to show you how versatile 
+        and convenient rice cooker cooking can be, making delicious meals 
+        accessible for everyone. Explore our collection of rice cooker recipes, 
+        discover new favorites, and transform your kitchen routine with the 
+        simplicity and joy of one-pot cooking.
       </p>
     </div>
 
@@ -52,16 +53,14 @@
         />
       </router-link>
       <p>
-        &copy; ChasAcademy | FUX2025 | 
-        <router-link to="/" class="footer-link">
-          <strong>About Grupp A &rarr;</strong>
-        </router-link>
+        &copy; ChasAcademy | FUX25  | Grupp A
       </p>
     </div>
   </footer>
 </template>
 
 <style scoped>
+/* Footer Container */
 .footer {
   position: relative;
   min-height: 480px;
@@ -73,7 +72,7 @@
 .footer-bg {
   position: absolute;
   inset: 0;
-  background-image: url("@/assets/footer_bild.png"); /* PNG image */
+  background-image: url("@/assets/footer_bild.png");
   background-size: cover;
   background-position: center;
   z-index: 1;
@@ -91,15 +90,23 @@
 .footer-content {
   position: relative;
   z-index: 3;
-  max-width: 900px;
-  padding: 4rem 2rem;
+  max-width: 100%;
+  padding: 4rem 1rem;
   text-align: left;
+  margin: 0 auto;
 }
 
 .title {
   font-size: 3rem;
   font-weight: 600;
   margin-bottom: 1rem;
+}
+
+.text {
+  font-size: 1.25rem;
+  line-height: 1.7rem;
+  margin-bottom: 3rem;
+  max-width: 600px;
 }
 
 .footer-link {
@@ -111,12 +118,6 @@
   text-decoration: underline;
 }
 
-.text {
-  font-size: 1.25rem;
-  line-height: 1.7rem;
-  margin-bottom: 3rem;
-}
-
 /* Social Icons */
 .icons {
   position: relative;
@@ -125,7 +126,10 @@
   gap: 1.5rem;
   justify-content: flex-start;
   margin-bottom: 3rem;
-  padding-left: 4rem;
+  padding-left: 1rem;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .icon-box {
@@ -171,4 +175,14 @@
   display: inline-block;
 }
 
+/* Media Queries */
+@media (min-width: 1024px) {
+  .footer-content {
+    max-width: 1280px;
+  }
+
+  .icons {
+    max-width: 1280px;
+  }
+}
 </style>

@@ -8,8 +8,8 @@ import Navigation from './Navigation.vue';
         <img class="hero-image" src="../assets/HeroImage2.png" alt="Delicious food" />
         <Navigation />
         <div class="hero-content">
-            <h1>Quick Recipes</h1>
-            <p>Where fast meets flavorful</p>
+            <h1>Rice Cooker Recipes</h1>
+            <p>Got a rice cooker? Good! No other appliance needed</p>
         </div>
     </header>
 </template>

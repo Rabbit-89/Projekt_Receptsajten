@@ -5,8 +5,9 @@ import { RouterLink } from 'vue-router'
 <template>
   <nav class="navbar">
     <div class="logobox">
-      <img alt="Recipe Website logo" class="logo" src="/src/assets/icon_logo.svg" width="125" height="125" />
-      <h2>logo</h2>
+      <RouterLink to="/">
+        <img alt="Recipe Website logo" class="logo" src="/src/assets/icon_logo.svg" width="125" height="125" />
+      </RouterLink>
     </div>
 
     <div class="nav-link">
