@@ -26,30 +26,26 @@ const categoryCounts = computed(() => {
   };
 
   recipes.value.forEach(recipe => {
-    //this loop runs through each recipe and checks its categoriesData array
-      if (recipe.categories && Array.isArray(recipe.categories)) 
-      //this runs only if the recipe has a categories array
-      {
-        recipe.categories.forEach(category => {
-          //this loop runs through each category of the recipe
-          if (mainCategories.includes(category)) {
-            counts[category]++;
-          }
-        });
+    recipe.categories.forEach(category => {
+      //this loop runs through each category of the recipe
+      if (mainCategories.includes(category)) {
+        counts[category]++;
       }
+    });
+
   });
-   return counts;
+  return counts;
 });
 
-  console.log('Category Counts:', categoryCounts.value);
+console.log('Category Counts:', categoryCounts.value);
 
 //use computed to create categories array with recipe counts
-  const categories = computed(() => [
-    { id:1, name:'Breakfast', categoriesData:'Breakfast', recipeCount: categoryCounts.value.Breakfast, icon: breakfastIcon},
-    { id:2, name:'Lunch', categoriesData:'Lunch', recipeCount: categoryCounts.value.Lunch, icon: lunchIcon},
-    { id:3, name:'Dinner', categoriesData:'Dinner', recipeCount: categoryCounts.value.Dinner, icon: dinnerIcon},
-    { id:4, name:'Desserts', categoriesData:'Desserts', recipeCount: categoryCounts.value.Desserts, icon: dessertIcon},
-  ])
+const categories = computed(() => [
+  { id: 1, name: 'Breakfast', categoriesData: 'Breakfast', recipeCount: categoryCounts.value.Breakfast, icon: breakfastIcon },
+  { id: 2, name: 'Lunch', categoriesData: 'Lunch', recipeCount: categoryCounts.value.Lunch, icon: lunchIcon },
+  { id: 3, name: 'Dinner', categoriesData: 'Dinner', recipeCount: categoryCounts.value.Dinner, icon: dinnerIcon },
+  { id: 4, name: 'Desserts', categoriesData: 'Desserts', recipeCount: categoryCounts.value.Desserts, icon: dessertIcon },
+])
 
 //Simple total - the total number of objects/recipe objects in the recipes array
 const totalRecipes = computed(() => recipes.value.length);
