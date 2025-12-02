@@ -4,6 +4,8 @@ import RecipeCard from '../components/RecipeCard.vue'
 import { fetchRecipes, fetchCategories } from '../services/api'
 import CategoryNav from '@/components/CategoryNav.vue';
 import SearchBar from '@/components/SearchBar.vue';
+import LoadingSpinner from '@/components/LoadingSpinner.vue';
+import ErrorMessage from '@/components/ErrorMessage.vue';
 
 /* Det gamla sättet att hämta data
 const recipes = ref([])
@@ -71,7 +73,7 @@ const filteredRecipes = computed(() => {
         // Search in category name
         const getCategoryName = (categoryId) => {
             if (allCategories.value.length === 0) return "";
-            const category = allCategories.value.find(cat => String(cat.is) === String(categoryId));
+            const category = allCategories.value.find(cat => String(cat.id) === String(categoryId));
             return category ? category.name : "";
         };
         const categoryName = getCategoryName(recipe.categoryId) || "";  
@@ -100,13 +102,24 @@ const updateSearchBar = (query) => {
 
     <h1 class="page-title">All Recipes</h1>
 
-        <SearchBar @search-update="updateSearchBar" />
-        
-    <div class="recipe-grid"> 
-    <RecipeCard 
-      v-for="recipe in filteredRecipes" 
-      :key="recipe.id" 
-      :recipe="recipe" 
+    <SearchBar @search-update="updateSearchBar" />
+    
+    <!-- Show loading spinner while data is being fetched -->
+    <LoadingSpinner v-if="loading" message="Loading recipes..." />
+    
+    <!-- Show error message if something went wrong -->
+    <ErrorMessage 
+      v-else-if="error" 
+      title="Failed to load recipes"
+      message="We couldn't load the recipes. Please try again later."
+    />
+    
+    <!-- Show recipe grid when data is loaded successfully -->
+    <div v-else class="recipe-grid"> 
+      <RecipeCard 
+        v-for="recipe in filteredRecipes" 
+        :key="recipe.id" 
+        :recipe="recipe" 
       />
     </div>
   </main>
