@@ -12,10 +12,14 @@ import Breadcrumbs from "../components/Breadcrumbs.vue";
 import RecipeHeader from "../components/RecipeHeader.vue";
 import Rating from "../components/Rating.vue";
 import Comment from '../components/Comment.vue'
+import LoadingSpinner from '../components/LoadingSpinner.vue';
+import ErrorMessage from '../components/ErrorMessage.vue';
 
-// --- EXISTING LOGIC ---
+
 const route = useRoute();
 const recipe = ref(null);
+const loading = ref(true);
+const error = ref(false);
 const checkedIngredients = ref(new Set());
 const checkedSteps = ref(new Set());
 
@@ -33,7 +37,7 @@ const breadcrumbs = computed(() => {
   if (!recipe.value) return [];
   return [
     { label: "Home", to: "/" },
-    { label: categoryName.value, to: `/categories/${categorySlug.value}` },
+    { label: categoryName.value, to: `/categories/${categoryName.value}` },
     { label: recipe.value.title },
   ];
 });
@@ -55,12 +59,18 @@ const commentsCount = computed(() => recipe.value?.comments?.length || 0);
 
 onMounted(async () => {
   const recipeId = route.params.id;
+  loading.value = true; // Show loading spinner when data is being fetched
+  error.value = false; // Reset error state
+  
   try {
     recipe.value = await fetchRecipeById(recipeId);
-    if (!recipe.value.comments) recipe.value.comments = [];
-  } catch (error) {
-    console.error("Failed to load recipe:", error);
-    recipe.value = null;
+    if (!recipe.value.comments) recipe.value.comments = []; 
+  } catch (err) {
+    console.error("Failed to load recipe:", err);
+    error.value = true; // Show error message if something went wrong
+    recipe.value = null; // Clear recipe data if there's an error
+  } finally {
+    loading.value = false; // Hide loading spinner when data is loaded
   }
 });
 
@@ -104,8 +114,21 @@ const addComment = () => {
 </script>
 
 <template>
-  <main class="recipe-view" v-if="recipe">
-    <!-- Breadcrumbs -->
+  <!-- Show loading spinner while data is being fetched -->
+  <LoadingSpinner v-if="loading" message="Loading recipe..." />
+  
+  <!-- Show error message if something went wrong -->
+  <div v-else-if="error" class="error-wrapper">
+    <ErrorMessage 
+      title="Recipe not found"
+      message="We couldn't load this recipe. It may not exist or there was an error."
+    />
+    <RouterLink to="/" class="back-link">← Back to recipes</RouterLink>
+  </div>
+  
+  <!-- Main recipe view - only shown when recipe data is loaded -->
+  <main class="recipe-view" v-else-if="recipe">
+    <!-- Navigation breadcrumbs -->
     <Breadcrumbs :items="breadcrumbs" />
 
     <!-- Recipe header -->
@@ -182,11 +205,6 @@ const addComment = () => {
       />
     </div>
   </main>
-
-  <div v-else class="recipe-not-found">
-    <h2>Recipe not found</h2>
-    <RouterLink to="/" class="back-link">← Back to recipes</RouterLink>
-  </div>
 </template>
 
 <style scoped>
@@ -209,27 +227,29 @@ const addComment = () => {
   margin-right: auto;
 }
 
-.recipe-not-found {
-  text-align: center;
-  padding: 4rem 2rem;
-  font-family: var(--font-main);
-  color: var(--black-color);
-}
-
-.recipe-not-found h2 {
-  color: var(--black-color);
-  margin-bottom: 2rem;
+.error-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 2rem 1rem;
 }
 
 .back-link {
-  color: var(--black-color);
-  text-decoration: underline;
+  display: inline-block;
+  padding: 0.75rem 2rem;
+  background-color: var(--brown-color);
+  color: var(--white-color);
+  text-decoration: none;
+  border-radius: 8px;
+  font-family: var(--font-main);
+  font-size: 1rem;
   font-weight: 500;
-  transition: color 0.2s ease;
+  transition: background-color 0.2s;
 }
 
 .back-link:hover {
-  text-decoration: none;
+  background-color: var(--gold-color);
 }
 
 .rating-section {

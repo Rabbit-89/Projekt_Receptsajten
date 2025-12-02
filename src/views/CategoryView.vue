@@ -5,9 +5,13 @@ import RecipeCard from '../components/RecipeCard.vue'
 import { fetchRecipes } from '@/services/api';
 import CategoryNav from '@/components/CategoryNav.vue';
 import SearchBar from '@/components/SearchBar.vue';
+import LoadingSpinner from '@/components/LoadingSpinner.vue';
+import ErrorMessage from '@/components/ErrorMessage.vue';
 
 const route = useRoute()
 const recipes = ref([])
+const loading = ref(true)
+const error = ref(false)
 
 // Get the current category slug from the route parameters
 const currentCategorySlug = computed(() => route.params.categoryId)
@@ -28,8 +32,18 @@ const displayTitle = computed(() => {
 
 
 onMounted(async () => {
-  // Fetch recipes from the API service
-  recipes.value = await fetchRecipes()
+  loading.value = true
+  error.value = false
+  
+  try {
+    // Fetch recipes from the API service
+    recipes.value = await fetchRecipes()
+  } catch (err) {
+    console.error("Failed to load recipes:", err)
+    error.value = true
+  } finally {
+    loading.value = false
+  }
 })
 </script>
 
@@ -41,8 +55,18 @@ onMounted(async () => {
 
     <h1 class="page-title">{{ displayTitle }}</h1>
 
+    <!-- Show loading spinner while data is being fetched -->
+    <LoadingSpinner v-if="loading" message="Loading recipes..." />
+    
+    <!-- Show error message if something went wrong -->
+    <ErrorMessage 
+      v-else-if="error" 
+      title="Failed to load recipes"
+      message="We couldn't load the recipes. Please try again later."
+    />
+    
     <!-- Recipe cards grid -->
-    <div v-if="filteredRecipes.length > 0" class="recipe-grid">
+    <div v-else-if="filteredRecipes.length > 0" class="recipe-grid">
       <RecipeCard 
         v-for="recipe in filteredRecipes" 
         :key="recipe.id" 
@@ -50,7 +74,7 @@ onMounted(async () => {
       />
     </div>
 
-<!-- No results message -->
+    <!-- No results message -->
     <div v-else class="no-results">
       <p>No recipes found in category "{{ displayTitle }}".</p>
     </div>
