@@ -77,50 +77,35 @@ onMounted(async () => {
 const currentRating = ref(0);
 const userHasRated = ref(false);
 
-// --- NEW COMMENT  ---
+// --- COMMENT FORM ---
 const newName = ref("");
-const newEmail = ref("");
 const newText = ref("");
 const thanks = ref(false);
 
 const addComment = () => {
   const name = newName.value.trim();
-  const email = newEmail.value.trim();
   const text = newText.value.trim();
 
-  // --- Validate required fields ---
   if (!name || !text) {
     alert("Please fill in the required fields: Name and Comment");
     return;
   }
 
-  // --- Validate email format if filled ---
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (email && !emailPattern.test(email)) {
-    alert("Please enter a valid email (example: ss@jj.se)");
-    return;
-  }
-
-  // --- Create new comment object ---
   const newComment = {
     author: name,
-    email: email,
     text: text,
     date: new Date().toISOString(),
-    replies: [],
+    replies: []
   };
 
-  // --- Add to recipe comments ---
   if (!recipe.value.comments) recipe.value.comments = [];
   recipe.value.comments.push(newComment);
-  console.log(recipe.value.comments);
 
-  // --- Reset form fields ---
+  // Reset form fields
   newName.value = "";
-  newEmail.value = "";
   newText.value = "";
 
-  // --- Show thank you message ---
+  // Show thank you message
   thanks.value = true;
   setTimeout(() => {
     thanks.value = false;
@@ -146,7 +131,7 @@ const addComment = () => {
     <!-- Navigation breadcrumbs -->
     <Breadcrumbs :items="breadcrumbs" />
 
-    <!-- Recipe header with image, title, and key stats -->
+    <!-- Recipe header -->
     <RecipeHeader
       :name="recipe.title"
       :image="recipe.imageUrl"
@@ -157,9 +142,8 @@ const addComment = () => {
       :description="recipe.description"
     />
 
-    <!-- Recipe content: ingredients and cooking instructions -->
+    <!-- Recipe content -->
     <div class="recipe-content">
-      <!-- Interactive ingredients checklist -->
       <Checklist
         :items="recipe.ingredients || []"
         :checked-items="checkedIngredients"
@@ -167,8 +151,6 @@ const addComment = () => {
         list-type="unordered"
         @update:checked-items="checkedIngredients = $event"
       />
-
-      <!-- Interactive cooking steps checklist -->
       <Checklist
         :items="recipe.instructions || []"
         :checked-items="checkedSteps"
@@ -178,15 +160,14 @@ const addComment = () => {
       />
     </div>
 
+    <!-- Rating section -->
     <div class="rating-section">
       <h3>Did you enjoy cooking this meal?</h3>
-
       <Rating
         v-model="currentRating"
         @update:modelValue="userHasRated = true"
         class="interactive-stars"
       />
-
       <p v-if="userHasRated" class="thank-you-text">
         Thanks! You have given this recipe a {{ currentRating }} star rating.
       </p>
@@ -195,45 +176,29 @@ const addComment = () => {
       </p>
     </div>
 
-    <!-- COMMENT FORM -->
+    <!-- Comment form -->
     <div class="add-comment">
       <h3>Leave a comment</h3>
-      <label style="display: flex; flex-direction: row">
-        Name
-        <span style="color: darkred; font-weight: bold; margin-left: 0.5rem">
-          *
-        </span
-        >
+      <label>
+        Name 
       </label>
       <input v-model="newName" type="text" placeholder="Type your name" />
 
       <label>
-        Email
-        <input v-model="newEmail" type="email" placeholder="Type your email" />
-      </label>
-      <label style="display: flex; flex-direction: row">
         Comment
-        <span style="color: darkred; font-weight: bold; margin-left: 0.5rem">
-          *
-        </span
-        >
       </label>
-      <textarea
-        v-model="newText"
-        rows="4"
-        placeholder="Type your comment"
-      ></textarea>
+      <textarea v-model="newText" rows="4" placeholder="Type your comment"></textarea>
 
       <button @click="addComment">Send Comment</button>
 
       <p v-if="thanks" class="thanks-text">Thanks for your comment!</p>
     </div>
 
-    <!-- COMMENTS LIST -->
+    <!-- Comments list -->
     <div class="comments-wrapper">
       <h3>{{ commentsCount }} Comments</h3>
       <hr />
-      <Comment 
+      <Comment
         v-for="(c, index) in recipe.comments"
         :key="index"
         :comment="c"
