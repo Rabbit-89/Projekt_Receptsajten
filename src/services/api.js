@@ -53,28 +53,34 @@ export async function fetchCategories() {
 }
 
 /**
- * Posts a rating for a specific recipe
- * param recipeId - The ID of the recipe
- * param rating - The rating value (number)
- * throws Error If the API request fails
+ * NEW FUNCTION:
+ * Posts a comment for a specific recipe
+ *
+ * - recipeId: ID of the recipe
+ * - name: comment author's name
+ * - comment: text of the comment
+ *
+ * Backend expects:  { "name": "...", "comment": "..." }
+ * Returns: the saved comment object from server
  */
-export async function postRating(recipeId, rating) {
-  const response = await fetch(`${API_BASE_URL}/${TEAM_ID}/recipes/${recipeId}/ratings`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(rating)
-  })
+export async function postComment(recipeId, name, comment) {
+  const response = await fetch(
+    `${API_BASE_URL}/${TEAM_ID}/recipes/${recipeId}/comments`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name,
+        comment
+      })
+    }
+  );
 
   if (!response.ok) {
-    throw new Error('Failed to post rating')
+    throw new Error('Failed to post comment');
   }
-  
-  // Om servern svarar 204 (No Content), försök inte läsa JSON
-  if (response.status === 204) {
-    return null
-  }
-  
-  return response.json()
+
+  // Server returns the created comment object
+  return response.json();
 }
+
