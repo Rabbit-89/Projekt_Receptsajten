@@ -1,23 +1,35 @@
 <script setup >
-import { ref, computed, onMounted, watch } from "vue";
-import { fetchCategories, fetchRecipes } from "../services/api";
-import RecipeCard from "./RecipeCard.vue";
+import { ref, watch } from "vue";
 
-
+/*
 const searchQuery = ref("");
 
-/* Use ref() för att lagra asynkron data */ 
+ Use ref() för att lagra asynkron data 
 const allRecipes = ref([]);
 const allCategories = ref([]);
 
-/* Status for loading and error */
+/* Status for loading and error 
 const loading = ref(true);
-const error = ref(false);
+const error = ref(false);*/ 
 
-/*using emit to export the recipecard 
-const emit = defineEmits(['update:filteredRecipes']);*/
+/*using emit to export the recipecard */
+const emit = defineEmits(['search-update']);
 
-/*Fel hantering och uploading data */
+/* Local search query to handle the input field */
+const localSearchQuery = ref("");
+
+/* Watch the localSearchQuery and emit the changes to the parent component */
+watch(localSearchQuery, (query) => {
+    /* Emit the new search query to the parent component */
+    emit('search-update', query);
+});
+
+const executeSearch = () => {
+    // This function is a method to handle the searchbar when the User uses the search button
+    console.log("Searching for:", localSearchQuery.value);
+}
+
+/*Fel hantering och uploading data 
 onMounted(async () => {
     loading.value = true;
     error.value = false;
@@ -26,9 +38,9 @@ onMounted(async () => {
     const [recipes, categories] = await Promise.all([
       fetchRecipes(),
       fetchCategories()
-    ]);
+    ]); */
 
-    /*The value will get uppdated when the data is getting fetch */
+    /*The value will get uppdated when the data is getting fetch 
     allRecipes.value = recipes;
     allCategories.value = categories;
 
@@ -38,7 +50,7 @@ onMounted(async () => {
   } finally {
     loading.value = false;  // sätt loading till false när hämtningen är klar
   }
-});
+});*/
 
 /*using watch to send out the list everytime it changed 
 watch(filteredRecipes, (newValue) => {
@@ -48,7 +60,7 @@ watch(filteredRecipes, (newValue) => {
 ); */
 
 
-
+/*
 const getCategoryName = (categoryId) => {
     const category = allCategories.value.find((cat) => {
         return String(cat.id) === String(categoryId);
@@ -57,7 +69,7 @@ const getCategoryName = (categoryId) => {
 }
 
 
-/*Sök logiken */
+/*Sök logiken 
 const filteredRecipes = computed(() => {
 
     if (loading.value || error.value) {
@@ -66,7 +78,7 @@ const filteredRecipes = computed(() => {
 
     const query = searchQuery.value.trim().toLowerCase();
 
-    /*Using .value to get access to the recipes data */
+    /*Using .value to get access to the recipes data 
     if (!query) {
         return allRecipes.value;
     }
@@ -75,9 +87,9 @@ const filteredRecipes = computed(() => {
         const matchName = recipe.name?.toLowerCase().includes(query) || false;
         const categoryName = getCategoryName(recipe.categoryId) || "";
 
-        const matchCategory = categoryName?.toLowerCase().includes(query) || false;
+        const matchCategory = categoryName?.toLowerCase().includes(query) || false;*/
 
-        /*Ingredients searching */
+        /*Ingredients searching 
         const title = recipe.name?.toLowerCase().includes(query);
         const ingredients = recipe.ingredients?.map(ing => ing.toLowerCase()).join("");
         const matchIngredients = ingredients.includes(query);
@@ -86,12 +98,13 @@ const filteredRecipes = computed(() => {
         return matchName || matchCategory || matchIngredients || title || description;
     });
     
-});
+});*/
 
+/*
 const executeSearch = () => {
     // This function is a method to handle the searchbar when the User uses the search button
     console.log("Searching for:", searchQuery.value);
-};
+}; */
 
 </script >
 
@@ -100,25 +113,14 @@ const executeSearch = () => {
     <form class="search-bar" @submit.prevent="executeSearch">
         
         <div class="search-container">
-            <input type="text" v-model="searchQuery" placeholder="Search our recipes" class="search-input"/>
-            <button type="button" class="search-icon" @click="searchQuery =''" v-if="searchQuery.length > 0" >
-            &times;
-            </button> 
-            <span v-else class="search-icon-static">🔍</span> 
+            <input type="text" v-model="localSearchQuery" placeholder="Search our recipes by name, categories or ingredients.." class="search-input" />
+            <span class="search-icon-static">🔍</span> 
         </div>
 
         <button type="submit" class="search-button">
         Search
         </button>
     </form>
-
-<div v-if="loading" class="status-message loading">Laddar recept och kategorier...</div>
-
-  <div v-else-if="error" class="status-message error">
-    ⚠️ Ett fel uppstod vid hämtning av data. Försök igen senare.
-  </div>
-
-  <!-- <RecipeCard :recipe="filteredRecipes" :loading="loading" :error="error"/> -->
 
 </template>
 

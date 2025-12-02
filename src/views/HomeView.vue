@@ -1,10 +1,11 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import RecipeCard from '../components/RecipeCard.vue'
-import { fetchRecipes } from '../services/api'
+import { fetchRecipes, fetchCategories } from '../services/api'
 import CategoryNav from '@/components/CategoryNav.vue';
 import SearchBar from '@/components/SearchBar.vue';
 
+/* Det gamla sättet att hämta data
 const recipes = ref([])
 
 onMounted(async () => {
@@ -14,7 +15,82 @@ onMounted(async () => {
     console.error('Failed to load recipes:', error)
     recipes.value = []
   }
-})
+}) */
+
+
+const searchQuery = ref("");
+
+/* Use ref() för att lagra asynkron data */ 
+const allRecipes = ref([]);
+const allCategories = ref([]);
+const loading = ref(true);
+const error = ref(false);
+
+onMounted(async () => {
+    loading.value = true;
+    error.value = false;
+
+  try {
+    const [recipes, categories] = await Promise.all([
+      fetchRecipes(),
+      fetchCategories()
+    ]);
+
+    /*The value will get uppdated when the data is getting fetch */
+    allRecipes.value = recipes;
+    allCategories.value = categories;
+
+  } catch (error) {
+    console.error("Failed to load data:", error);
+    error.value = true;  // sätt felstatus vid misslyckande
+  } finally {
+    loading.value = false;  // sätt loading till false när hämtningen är klar
+  }
+});
+
+/*Filtrerings logiken */
+const filteredRecipes = computed(() => {
+
+    const query = searchQuery.value.trim().toLowerCase();
+
+    /*Using .value to get access to the recipes data */
+    if (!query) {
+        return allRecipes.value;
+    }
+
+    return allRecipes.value.filter(recipe => {
+
+        // Search in name
+        const matchName = recipe.name?.toLowerCase().includes(query) || false;  
+        
+        // Search in ingredients
+        const ingredients = (recipe.ingredients || []).map(ing => ing.toLowerCase()).join("");
+        const matchIngredients = ingredients.includes(query);
+
+
+        // Search in category name
+        const getCategoryName = (categoryId) => {
+            if (allCategories.value.length === 0) return "";
+            const category = allCategories.value.find(cat => String(cat.is) === String(categoryId));
+            return category ? category.name : "";
+        };
+        const categoryName = getCategoryName(recipe.categoryId) || "";  
+        const matchCategory = categoryName?.toLowerCase().includes(query) || false;
+
+        // Search in description
+        const title = recipe.name?.toLowerCase().includes(query);
+        const description = recipe.description?.toLowerCase().includes(query) || false;
+
+        return matchName || matchCategory || matchIngredients || title || description;
+    });
+    
+});
+
+const updateSearchBar = (query) => {
+    searchQuery.value = query;
+}
+
+
 </script>
 
 <template>
@@ -24,11 +100,11 @@ onMounted(async () => {
 
     <h1 class="page-title">All Recipes</h1>
 
-        <SearchBar />
+        <SearchBar @search-update="updateSearchBar" />
         
     <div class="recipe-grid"> 
     <RecipeCard 
-      v-for="recipe in recipes" 
+      v-for="recipe in filteredRecipes" 
       :key="recipe.id" 
       :recipe="recipe" 
       />

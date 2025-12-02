@@ -36,6 +36,8 @@ onMounted(async () => {
 <template>
   <main class="category-container">
     <CategoryNav />
+    
+    <SearchBar />
 
     <h1 class="page-title">{{ displayTitle }}</h1>
 
@@ -53,7 +55,7 @@ onMounted(async () => {
       <p>No recipes found in category "{{ displayTitle }}".</p>
     </div>
   </main>
-  <SearchBar />
+  
 </template>
 
 <style scoped>
