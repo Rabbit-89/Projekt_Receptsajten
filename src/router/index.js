@@ -23,6 +23,15 @@ const router = createRouter({
 
   ],
   linkActiveClass: 'category-active-link',
+  // Ensure we scroll to top when navigating, especially to RecipeView
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      // Browser back/forward button: restore previous position
+      return savedPosition
+    }
+    // Always scroll to top on route change
+    return { top: 0 }
+  },
 })
 
 export default router
