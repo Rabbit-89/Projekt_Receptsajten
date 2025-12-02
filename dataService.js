@@ -1,5 +1,5 @@
-import recipesData from './recipesData.json';
-import categoriesData from './categoriesData.json';
+import recipesData from '../Projekt_Receptsajten/src/data/recipes.json';
+import categoriesData from '..Projekt_Receptsajten/src/data/categories.json';
 
 export function getRecipes() {
     return recipesData;

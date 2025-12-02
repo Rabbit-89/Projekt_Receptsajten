@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 import RecipeCard from '../components/RecipeCard.vue'
 import { fetchRecipes } from '@/services/api';
 import CategoryNav from '@/components/CategoryNav.vue';
+import SearchBar from '@/components/SearchBar.vue';
 
 const route = useRoute()
 const recipes = ref([])
@@ -35,6 +36,8 @@ onMounted(async () => {
 <template>
   <main class="category-container">
     <CategoryNav />
+    
+    <SearchBar />
 
     <h1 class="page-title">{{ displayTitle }}</h1>
 
@@ -52,6 +55,7 @@ onMounted(async () => {
       <p>No recipes found in category "{{ displayTitle }}".</p>
     </div>
   </main>
+  
 </template>
 
 <style scoped>
