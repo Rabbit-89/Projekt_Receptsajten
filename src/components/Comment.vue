@@ -1,86 +1,105 @@
-<script>
-export default {
-  name: "Comment",
-  props: {
-    comment: { type: Object, required: true }
-  },
-  data() {
-    return {
-      showReply: false,
-      showReplies: false,
-      replyText: ""
-    };
-  },
-  computed: {
-    formattedDate() {
-      if (!this.comment.date) return ''
-      const date = new Date(this.comment.date)
-      const options = { 
-        year: 'numeric', month: 'long', day: 'numeric', 
-        hour: 'numeric', minute: '2-digit', hour12: true 
-      }
-      return date.toLocaleString('en-US', options).replace(',', ' ,')
-    }
-  },
-  methods: {
-    toggleReplyBox() {
-      this.showReply = !this.showReply;
-      
-      this.showReplies = false;
-    },
-    sendReply() {
-      if (!this.replyText.trim()) return;
-      if (!this.comment.replies) this.$set(this.comment, "replies", []);
-      this.comment.replies.push(this.replyText);
-      this.replyText = "";
-      this.showReply = false;
-      this.showReplies = true;
-    }
-  }
-};
+<script setup>
+import { ref, computed } from "vue";
+
+const props = defineProps({
+  comment: { type: Object, required: true }
+});
+
+// Local UI state
+const showReply = ref(false);
+const showReplies = ref(false);
+const replyText = ref("");
+
+// Format date
+const formattedDate = computed(() => {
+  if (!props.comment.date) return "";
+  const date = new Date(props.comment.date);
+  const options = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true
+  };
+  return date.toLocaleString("en-US", options).replace(",", " ,");
+});
+
+function toggleReplyBox() {
+  showReply.value = !showReply.value;
+  showReplies.value = false;
+}
+
+function sendReply() {
+  const text = replyText.value.trim();
+  if (!text) return;
+
+  // Ensure replies array exists
+  if (!props.comment.replies) props.comment.replies = [];
+
+  // Push reply into parent's comment object
+  props.comment.replies.push(text);
+
+  replyText.value = "";
+  showReply.value = false;
+  showReplies.value = true;
+}
 </script>
 
 <template>
-<div class="comment-section">
-  <div class="comment-card">
-    <div class="avatar">{{ comment.author.charAt(0).toUpperCase() }}</div>
-    <div class="content">
-      <div class="header">
-        <strong>{{ comment.author }}</strong>
-        <span class="date">{{ formattedDate }}</span>
+  <div class="comment-section">
+    <div class="comment-card">
+      <div class="avatar">
+        {{ props.comment.author.charAt(0).toUpperCase() }}
       </div>
 
-      <p class="text">{{ comment.text }}</p>
+      <div class="content">
+        <div class="header">
+          <strong>{{ props.comment.author }}</strong>
+          <span class="date">{{ formattedDate }}</span>
+        </div>
 
-      <div class="reply-actions">
-        <button class="reply-btn" @click="toggleReplyBox">
-          {{ showReply ? 'Cancel' : 'Reply' }}
-        </button>
+        <p class="text">{{ props.comment.text }}</p>
 
-        <span 
-          v-if="comment.replies && comment.replies.length"
-          class="toggle-replies"
-          @click="showReplies = !showReplies"
+        <div class="reply-actions">
+          <button class="reply-btn" @click="toggleReplyBox">
+            {{ showReply ? "Cancel" : "Reply" }}
+          </button>
+
+          <span
+            v-if="props.comment.replies && props.comment.replies.length"
+            class="toggle-replies"
+            @click="showReplies = !showReplies"
+          >
+            ↩ ({{ props.comment.replies.length }})
+          </span>
+        </div>
+
+        <div v-if="showReply" class="reply-box">
+          <textarea
+            v-model="replyText"
+            placeholder="Type your reply..."
+            rows="3"
+          ></textarea>
+          <button @click="sendReply">Send</button>
+        </div>
+
+        <div
+          v-if="
+            props.comment.replies &&
+            props.comment.replies.length &&
+            showReplies
+          "
+          class="replies"
         >
-          ↩ ({{ comment.replies.length }})
-        </span>
-      </div>
-
-      <div v-if="showReply" class="reply-box">
-        <textarea v-model="replyText" placeholder="Type your reply..." rows="3"></textarea>
-        <button @click="sendReply">Send</button>
-      </div>
-
-      <div v-if="comment.replies && comment.replies.length && showReplies" class="replies">
-        <p v-for="(r, i) in comment.replies" :key="i">{{ r }}</p>
+          <p v-for="(r, i) in props.comment.replies" :key="i">{{ r }}</p>
+        </div>
       </div>
     </div>
   </div>
-</div>
 </template>
 
 <style scoped>
-
 .comment-card {
   display: flex;
   gap: 1rem;
@@ -125,7 +144,7 @@ export default {
 
 .reply-btn {
   background: none;
-  border: 2px solid #212F63;
+  border: 2px solid #212f63;
   border-radius: 6px;
   color: var(--brown-color);
   cursor: pointer;
@@ -136,7 +155,7 @@ export default {
 .toggle-replies {
   cursor: pointer;
   font-weight: bold;
-  color: #212F63;
+  color: #212f63;
   user-select: none;
 }
 
@@ -170,8 +189,11 @@ export default {
   padding-left: 1rem;
   color: #555;
 }
-.replies p{
+
+.replies p {
   margin-bottom: 1rem;
   border: 2px solid #ddd;
+  padding: 0.5rem;
+  border-radius: 6px;
 }
 </style>
