@@ -1,8 +1,8 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import RecipeCard from '../components/RecipeCard.vue'
-import { fetchRecipes } from '@/services/api';
+import { fetchRecipes, fetchCategories } from '@/services/api';
 import CategoryNav from '@/components/CategoryNav.vue';
 import SearchBar from '@/components/SearchBar.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
@@ -10,11 +10,24 @@ import ErrorMessage from '@/components/ErrorMessage.vue';
 
 const route = useRoute()
 const recipes = ref([])
+const categories = ref([])
 const loading = ref(true)
 const error = ref(false)
+const categoryNotFound = ref(false)
 
 // Get the current category slug from the route parameters
 const currentCategorySlug = computed(() => route.params.categoryId)
+
+// Function to check if category exists
+const checkCategoryExists = (categorySlug) => {
+  if (!categories.value.length || !categorySlug) return false
+  // Check if the category slug exists in the categories array
+  return categories.value.some(cat => {
+    const categoryName = typeof cat === 'string' ? cat : cat.name || cat.slug
+    return categoryName === categorySlug || 
+           categoryName?.toLowerCase() === categorySlug?.toLowerCase()
+  })
+}
 
 const filteredRecipes = computed(() => {
   return recipes.value.filter(recipe => {
@@ -34,15 +47,34 @@ const displayTitle = computed(() => {
 onMounted(async () => {
   loading.value = true
   error.value = false
+  categoryNotFound.value = false
   
   try {
-    // Fetch recipes from the API service
-    recipes.value = await fetchRecipes()
+    // Fetch both recipes and categories from the API service
+    const [recipesData, categoriesData] = await Promise.all([
+      fetchRecipes(),
+      fetchCategories()
+    ])
+    
+    recipes.value = recipesData
+    categories.value = categoriesData
+    
+    // Check if the category exists after fetching
+    if (currentCategorySlug.value && !checkCategoryExists(currentCategorySlug.value)) {
+      categoryNotFound.value = true
+    }
   } catch (err) {
-    console.error("Failed to load recipes:", err)
+    console.error("Failed to load data:", err)
     error.value = true
   } finally {
     loading.value = false
+  }
+})
+
+// Watch for route changes to re-check category existence
+watch(() => route.params.categoryId, (newCategoryId) => {
+  if (categories.value.length) {
+    categoryNotFound.value = newCategoryId ? !checkCategoryExists(newCategoryId) : false
   }
 })
 </script>
@@ -53,7 +85,7 @@ onMounted(async () => {
     
     <SearchBar />
 
-    <h1 class="page-title">{{ displayTitle }}</h1>
+    <h1 v-if="!loading && !error && !categoryNotFound" class="page-title">{{ displayTitle }}</h1>
 
     <!-- Show loading spinner while data is being fetched -->
     <LoadingSpinner v-if="loading" message="Loading recipes..." />
@@ -65,6 +97,11 @@ onMounted(async () => {
       message="We couldn't load the recipes. Please try again later."
     />
     
+    <!-- Show error if category does not exist -->
+    <div v-else-if="categoryNotFound" class="category-not-found">
+      <p>Oops... Category does not exist.</p>
+    </div>
+    
     <!-- Recipe cards grid -->
     <div v-else-if="filteredRecipes.length > 0" class="recipe-grid">
       <RecipeCard 
@@ -74,7 +111,7 @@ onMounted(async () => {
       />
     </div>
 
-    <!-- No results message -->
+    <!-- No results message (category exists but is empty) -->
     <div v-else class="no-results">
       <p>No recipes found in category "{{ displayTitle }}".</p>
     </div>
@@ -101,6 +138,15 @@ onMounted(async () => {
   font-family: var(--font-main);
   color: var(--dark-gray-color);
   font-size: 1.2rem;
+}
+
+.category-not-found {
+  text-align: center;
+  padding: 2rem;
+  font-family: var(--font-main);
+  color: var(--dark-gray-color);
+  font-size: 1.2rem;
+  font-weight: 600;
 }
 
 
