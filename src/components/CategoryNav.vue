@@ -185,14 +185,14 @@ h1 {
 
 }
 
-/* Styles for medium screens (e.g., laptops) */
+/* Styles for medium screens (e.g.tablet, laptops) */
 @media screen and (min-width: 768px) {
 
   /* ... */
   .category-nav {
-    display: flex;
+    display: grid;
     /*displays the categories in a row*/
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
