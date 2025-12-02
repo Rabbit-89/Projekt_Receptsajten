@@ -50,7 +50,7 @@ function sendReply() {
   <div class="comment-section">
     <div class="comment-card">
       <div class="avatar">
-        {{ props.comment.author.charAt(0).toUpperCase() }}
+        {{ props.comment.author?.charAt(0)?.toUpperCase() || "?" }}
       </div>
 
       <div class="content">
