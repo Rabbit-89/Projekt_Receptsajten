@@ -6,7 +6,7 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { useRoute, RouterLink } from "vue-router";
-import { fetchRecipeById } from "../services/api";
+import { fetchRecipeById, postRating } from "../services/api";
 import Checklist from "../components/Checklist.vue";
 import Breadcrumbs from "../components/Breadcrumbs.vue";
 import RecipeHeader from "../components/RecipeHeader.vue";
@@ -45,14 +45,17 @@ const breadcrumbs = computed(() => {
 const ingredientsCount = computed(() => recipe.value?.ingredients?.length || 0);
 
 const rating = computed(() => {
-  if (!recipe.value) return "0";
+  if (!recipe.value) return 0;
+
   if (recipe.value.ratings?.length > 0) {
     const avg =
       recipe.value.ratings.reduce((sum, r) => sum + (r.rating || 0), 0) /
       recipe.value.ratings.length;
-    return avg.toFixed(1);
+
+    // Konvertera tillbaka till nummer med Number()
+    return Number (avg.toFixed(1));
   }
-  return "0";
+  return 0;
 });
 
 const commentsCount = computed(() => recipe.value?.comments?.length || 0);
@@ -77,12 +80,29 @@ onMounted(async () => {
 const currentRating = ref(0);
 const userHasRated = ref(false);
 
+// Ny funktion som hanterar röstning direkt
+const handleRating = async (stars) => {
+  currentRating.value = stars; // Uppdatera stjärnorna på skärmen
+  
+  try {
+    // Skicka till API direkt via vår service-funktion
+    await postRating(route.params.id, stars);
+    
+    // Visa tack-meddelandet
+    userHasRated.value = true;
+
+  } catch (error) {
+    console.error(error);
+    alert("Kunde inte spara betyget.");
+  }
+};
+
 // --- COMMENT FORM ---
 const newName = ref("");
 const newText = ref("");
 const thanks = ref(false);
 
-const addComment = () => {
+const addComment = async () => {
   const name = newName.value.trim();
   const text = newText.value.trim();
 
@@ -164,8 +184,8 @@ const addComment = () => {
     <div class="rating-section">
       <h3>Did you enjoy cooking this meal?</h3>
       <Rating
-        v-model="currentRating"
-        @update:modelValue="userHasRated = true"
+        :modelValue="currentRating"
+        @update:modelValue="handleRating"
         class="interactive-stars"
       />
       <p v-if="userHasRated" class="thank-you-text">
