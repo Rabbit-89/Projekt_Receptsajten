@@ -31,6 +31,8 @@ onMounted(() => {
 <template>
   <main class="category-container">
     <CategoryNav />
+    
+    <SearchBar />
 
     <h1 class="page-title">{{ displayTitle }}</h1>
 
@@ -46,7 +48,7 @@ onMounted(() => {
       <p>Inga recept hittades i kategorin "{{ displayTitle }}".</p>
     </div>
   </main>
-  <SearchBar />
+  
 </template>
 
 <style scoped>
