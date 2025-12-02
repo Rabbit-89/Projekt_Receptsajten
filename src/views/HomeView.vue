@@ -19,7 +19,7 @@ onMounted(async () => {
   }
 }) */
 
-
+//State för sökning
 const searchQuery = ref("");
 
 /* Use ref() för att lagra asynkron data */ 
@@ -69,7 +69,6 @@ const filteredRecipes = computed(() => {
         const ingredients = (recipe.ingredients || []).map(ing => ing.toLowerCase()).join("");
         const matchIngredients = ingredients.includes(query);
 
-
         // Search in category name
         const getCategoryName = (categoryId) => {
             if (allCategories.value.length === 0) return "";
@@ -88,6 +87,7 @@ const filteredRecipes = computed(() => {
     
 });
 
+// Funktion som tar emot sökordet från SearchBar-komponenten
 const updateSearchBar = (query) => {
     searchQuery.value = query;
 }
@@ -142,7 +142,7 @@ const updateSearchBar = (query) => {
   color: var(--brown-color);
 }
 
-/* Grid layout */
+/* Grid layout & design */
 
 /* Mobile - 1 kolumn */
 .recipe-grid {

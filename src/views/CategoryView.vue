@@ -28,7 +28,7 @@ const checkCategoryExists = (categorySlug) => {
            categoryName?.toLowerCase() === categorySlug?.toLowerCase()
   })
 }
-
+// Filtrerar listan så att vi bara visar recept som tillhör den valda kategorin
 const filteredRecipes = computed(() => {
   return recipes.value.filter(recipe => {
     // Check if the recipe's categories include the current category slug
@@ -150,7 +150,7 @@ watch(() => route.params.categoryId, (newCategoryId) => {
 }
 
 
-/* Mobil */
+/* Mobil Grid 1 kolumn*/
 .recipe-grid {
   display: grid;
   grid-template-columns: 1fr; 
@@ -167,7 +167,7 @@ watch(() => route.params.categoryId, (newCategoryId) => {
     gap: 2rem;
   }
 }
-/* Desktop */
+/* Desktop 4 kolumner*/
 @media (min-width: 1024px) {
   .recipe-grid {
     grid-template-columns: repeat(4, 1fr); 
