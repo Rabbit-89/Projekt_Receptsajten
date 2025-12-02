@@ -53,10 +53,10 @@ const totalRecipes = computed(() => recipes.value.length);
 //Icon function based on category slug
 function getCategoryIcon(categoriesData) {
   const icons = {
-    breakfast: breakfastIcon,
-    lunch: lunchIcon,
-    dinner: dinnerIcon,
-    desserts: dessertIcon
+    Breakfast: breakfastIcon,
+    Lunch: lunchIcon,
+    Dinner: dinnerIcon,
+    Desserts: dessertIcon
   }
   return icons[categoriesData] || breakfastIcon; //default icon, if there is a new category added without an icon
 }
