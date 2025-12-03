@@ -52,3 +52,48 @@ export async function fetchCategories() {
   return response.json()
 }
 
+/**
+ * Fetches all available recipe comments
+ * returns Array of comment objects
+ * throws Error If the API request fails
+ */
+export async function fetchComments(recipeId) {
+  const response = await fetch(`${API_BASE_URL}/${TEAM_ID}/recipes/${recipeId}/comments`)
+  if (!response.ok) {
+    throw new Error('Failed to fetch comments')
+  }
+  return response.json()
+}
+
+/**
+ * NEW FUNCTION:
+ * Posts a comment for a specific recipe
+ *
+ * - recipeId: ID of the recipe
+ * - name: comment author's name
+ * - comment: text of the comment
+ *
+ * Backend expects:  { "name": "...", "comment": "..." }
+ * Returns: the saved comment object from server
+ */
+export async function postComment(recipeId, name, comment) {
+  const response = await fetch(
+    `${API_BASE_URL}/${TEAM_ID}/recipes/${recipeId}/comments`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name,
+        comment
+      })
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error('Failed to post comment');
+  }
+
+  // Server returns the created comment object
+  return response.json();
+}
+
