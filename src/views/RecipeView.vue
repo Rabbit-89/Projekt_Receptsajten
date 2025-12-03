@@ -6,7 +6,7 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { useRoute, RouterLink } from "vue-router";
-import { fetchRecipeById, postComment } from "../services/api";
+import { fetchRecipeById, postComment, fetchComments } from "../services/api";
 import Checklist from "../components/Checklist.vue";
 import Breadcrumbs from "../components/Breadcrumbs.vue";
 import RecipeHeader from "../components/RecipeHeader.vue";
@@ -66,10 +66,11 @@ onMounted(async () => {
     recipe.value = await fetchRecipeById(recipeId);
 
     // Ensure comments array exists
-    if (!recipe.value.comments) recipe.value.comments = [];
-  
+    const comments = await fetchComments(recipeId);
+    recipe.value.comments = comments || [];
+   
   } catch (err) {
-    console.error("Failed to load recipe:", err);
+    console.error("Failed to load recipe or comments", err);
     error.value = true;   // Show error message if something went wrong
 
     recipe.value = null;  // Clear recipe data if there's an error
