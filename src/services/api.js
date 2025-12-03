@@ -53,6 +53,19 @@ export async function fetchCategories() {
 }
 
 /**
+ * Fetches all available recipe comments
+ * returns Array of comment objects
+ * throws Error If the API request fails
+ */
+export async function fetchComments(recipeId) {
+  const response = await fetch(`${API_BASE_URL}/${TEAM_ID}/recipes/${recipeId}/comments`)
+  if (!response.ok) {
+    throw new Error('Failed to fetch comments')
+  }
+  return response.json()
+}
+
+/**
  * NEW FUNCTION:
  * Posts a comment for a specific recipe
  *
