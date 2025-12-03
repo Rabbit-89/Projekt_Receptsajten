@@ -152,14 +152,16 @@ const userHasRated = ref(false);
       @comment-added="recipe.comments.push($event)"
     />
 
-    <!-- Comments -->
+    <!-- Comments section -->
     <div class="comments-wrapper">
       <h3>{{ commentsCount }} Comments</h3>
-      <hr />
+    
+      <!-- Show Comments List -->
       <Comment
         v-for="(c, index) in recipe.comments"
         :key="index"
         :comment="c"
+        :comments-count="recipe.comments.length"
       />
     </div>
   </main>
@@ -267,6 +269,25 @@ const userHasRated = ref(false);
 .rating-section {
   margin-top: 2rem;
   padding-top: 1.5rem;
+}
+
+.comments-wrapper h3 {
+  font-family: var(--font-secondary);
+  font-size: 1.8rem;
+  color: var(--black-color);
+  margin: 0;
+}
+.comments-wrapper {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  background: #ffffff; /* ljus bakgrund */
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 1rem;
 }
 
 </style>
