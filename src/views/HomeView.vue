@@ -25,13 +25,18 @@ const searchQuery = ref("");
 /* Use ref() för att lagra asynkron data */ 
 const allRecipes = ref([]);
 const allCategories = ref([]);
+
+// Status for loading and error
 const loading = ref(true);
 const error = ref(false);
 
+
+// Använda onMounted() för att aynkrona nätverksanrop och att datan hämtas i rätt timing i komponenterna. 
 onMounted(async () => {
     loading.value = true;
     error.value = false;
 
+    // Promise.all tar en array av Promises som inmatning. och det är "fetchRecipes()" och "fetchCategories()" i detta fallet.
   try {
     const [recipes, categories] = await Promise.all([
       fetchRecipes(),
@@ -50,7 +55,9 @@ onMounted(async () => {
   }
 });
 
-/*Filtrerings logiken */
+/* Filtrerings logiken, används computed() för 
+
+*/
 const filteredRecipes = computed(() => {
 
     const query = searchQuery.value.trim().toLowerCase();
@@ -74,13 +81,13 @@ const filteredRecipes = computed(() => {
         const getCategoryName = (categoryId) => {
             if (allCategories.value.length === 0) return "";
             const category = allCategories.value.find(cat => String(cat.id) === String(categoryId));
-            return category ? category.name : "";
+            return category ? category.name : ""; 
         };
         const categoryName = getCategoryName(recipe.categoryId) || "";  
         const matchCategory = categoryName?.toLowerCase().includes(query) || false;
 
         // Search in description
-        const title = recipe.name?.toLowerCase().includes(query);
+        const title = recipe.name?.toLowerCase().includes(query); // använda Optional Chaining (?) för att undvika fel om name är undefined, och kontrollera egenskaper existerar innan man anropar metoder på dem.
         const description = recipe.description?.toLowerCase().includes(query) || false;
 
         return matchName || matchCategory || matchIngredients || title || description;
