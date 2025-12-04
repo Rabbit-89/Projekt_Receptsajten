@@ -6,7 +6,7 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { useRoute, RouterLink } from "vue-router";
-import { fetchRecipeById, postRating, postComment, fetchComments } from "../services/api";
+import { fetchRecipeById, postRating, fetchRatings, postComment, fetchComments } from "../services/api";
 import Checklist from "../components/Checklist.vue";
 import Breadcrumbs from "../components/Breadcrumbs.vue";
 import RecipeHeader from "../components/RecipeHeader.vue";
@@ -45,16 +45,23 @@ const breadcrumbs = computed(() => {
 const ingredientsCount = computed(() => recipe.value?.ingredients?.length || 0);
 
 const rating = computed(() => {
+  // Om inget recept finns än, visa 0
   if (!recipe.value) return 0;
 
+  // Om det finns betyg
   if (recipe.value.ratings?.length > 0) {
-    const avg =
-      recipe.value.ratings.reduce((sum, r) => sum + (r.rating || 0), 0) /
-      recipe.value.ratings.length;
+    const avg = recipe.value.ratings.reduce((sum, r) => {
+     
+      // Vi kollar: Är 'r' en siffra? Använd den. Annars hämta .rating eller .value
+      const ratingValue = typeof r === 'number' ? r : (r.rating || r.value || 0);
+      return sum + ratingValue;
+    }, 0) / recipe.value.ratings.length;
 
-    // Konvertera tillbaka till nummer med Number()
-    return Number (avg.toFixed(1));
+    // Returnera med 1 decimal (t.ex. 4.5)
+    return avg.toFixed(1);
   }
+  
+  // Om inga betyg finns
   return 0;
 });
 
@@ -72,6 +79,10 @@ onMounted(async () => {
     const comments = await fetchComments(recipeId);
     recipe.value.comments = comments || [];
    
+    // Hämtar betyget 
+    const ratings = await fetchRatings(recipeId);
+    recipe.value.ratings = ratings || [];
+
   } catch (err) {
     console.error("Failed to load recipe or comments", err);
     error.value = true;   // Show error message if something went wrong
@@ -94,10 +105,10 @@ const handleRating = async (stars) => {
     // Skicka till API direkt via vår service-funktion
     await postRating(route.params.id, stars);
 
-    // Hämta receptet igen för att uppdatera snittbetyget direkt 
-    recipe.value = await fetchRecipeById(route.params.id);
+    // Hämta det uppdaterade betyg direkt
+    const updatedRatings = await fetchRatings(route.params.id);
+    recipe.value.ratings = updatedRatings || [];
     
-    // Visa tack-meddelandet
     userHasRated.value = true;
 
   } catch (error) {

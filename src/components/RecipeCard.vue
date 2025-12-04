@@ -6,7 +6,7 @@
 <script setup>
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
-import Rating from './Rating.vue';
+// import Rating from './Rating.vue';
 
 // Props: recipe object containing all recipe information
 const props = defineProps({
@@ -28,7 +28,7 @@ const rating = computed(() => {
             const ratingValue = typeof r === 'number' ? r : (r.rating || 0)
             return sum + ratingValue
         }, 0) / props.recipe.ratings.length
-        return avg.toFixed(1)
+        return Number(avg.toFixed(1))
     }
     return '0'
 })
