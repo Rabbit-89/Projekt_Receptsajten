@@ -50,10 +50,7 @@ const formatDate = (dateString) => {
        + → combines the capitalized first letter with the rest of the name
        Result: displays the author’s name with the first letter capitalized, even if the original name was all lowercase-->
       <p class="comment-author">
-        {{
-          props.comment.name?.charAt(0).toUpperCase() +
-          props.comment.name?.substring(1)
-        }}
+        {{ props.comment.name?.charAt(0).toUpperCase() + props.comment.name?.substring(1) }}
       </p>
       <!-- Comment Date -->
       <p class="comment-date">{{ formatDate(props.comment.createdAt) }}</p>
@@ -99,7 +96,7 @@ const formatDate = (dateString) => {
   height: 45px;
   border-radius: 50%;
   background: var(--gold-color);
-  color: white;
+  color: var(--black-color);  /* dark text color for contrast*/
   font-weight: bold;
   display: flex;
   align-items: center;

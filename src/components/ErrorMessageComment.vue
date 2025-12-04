@@ -55,9 +55,9 @@ const close = () => emit("close");
 
 /* Modal content box */
 .modal-content {
-  background-color: #2a2a2a; /* Dark mode background */
-  color: #f5f5f5; /* Light text for contrast */
-  border: 2px solid #b7352b; /* Red border for error highlight */
+  background-color: var(--light-yellow-color);
+  color: var(--black-color);  
+  border: 2px solid var(--orange-color); 
   border-radius: 12px;
   width: 90%;
   max-width: 420px;
@@ -79,13 +79,13 @@ const close = () => emit("close");
   position: absolute;
   top: 10px;
   right: 16px;
-  color: #f5f5f5;
+  color: var(--black-color);
   font-size: 1.8rem;
   font-weight: bold;
   cursor: pointer;
 }
 .close-btn:hover {
-  color: #ff6961; /* Slight red hover effect */
+  color: var(--orange-color); /* Slight red hover effect */
 }
 
 /* Modal title style */
@@ -93,21 +93,22 @@ const close = () => emit("close");
   font-family: var(--font-secondary);
   font-size: 1.5rem;
   margin-bottom: 0.5rem;
-  color: #ff4c4c; /* Bright red title */
+  font-weight: bold;
+  color: var(--black-color);
 }
 
 /* Modal message text */
 .modal-message {
   font-family: var(--font-main);
-  color: #e0e0e0; /* Light grey text */
+  color: var(--black-color);
   margin-bottom: 1.4rem;
   line-height: 1.4;
 }
 
 /* OK button style */
 .modal-button {
-  background-color: #573311;
-  color: white;
+  background-color: var(--orange-color);
+  color: var(--black-color);
   padding: 0.6rem 1.8rem;
   border-radius: 30px;
   font-family: var(--font-main);
@@ -115,7 +116,7 @@ const close = () => emit("close");
   font-size: 1rem;
 }
 .modal-button:hover {
-  background-color: #773f23;
-  border: 2px solid #f9ae4a; /* Highlight on hover */
+  background-color: var(--light-yellow-color);
+  border: 2px solid var(--orange-color); /* Highlight on hover */
 }
 </style>
