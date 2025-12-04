@@ -78,7 +78,8 @@ export async function postRating(recipeId, rating) {
   
   return response.json()
 }
- * Fetches all available recipe comments
+
+ /** Fetches all available recipe comments
  * returns Array of comment objects
  * throws Error If the API request fails
  */
@@ -91,7 +92,6 @@ export async function fetchComments(recipeId) {
 }
 
 /**
- * NEW FUNCTION:
  * Posts a comment for a specific recipe
  *
  * - recipeId: ID of the recipe
