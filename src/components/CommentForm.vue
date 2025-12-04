@@ -41,7 +41,7 @@ const sendComment = async () => {
 
   // Validation
   if (!name || !comment) {
-    errorTitle.value = "Missing Required Fields";
+    errorTitle.value = "Missing Fields";
     errorMessage.value = "Please enter both your name and your comment.";
     errorComment.value = true;
     return;

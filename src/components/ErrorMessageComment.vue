@@ -26,8 +26,6 @@ const close = () => emit("close");
   <div class="modal-overlay" @click="close">
     <!-- Modal box content, click.stop prevents closing when clicking inside -->
     <div class="modal-content" @click.stop>
-      <!-- Close button (X) -->
-      <span class="close-btn" @click="close">&times;</span>
 
       <!-- Modal title -->
       <h2 class="modal-title">{{ title }}</h2>
@@ -35,8 +33,8 @@ const close = () => emit("close");
       <!-- Modal message -->
       <p class="modal-message">{{ message }}</p>
 
-      <!-- OK button to close modal --
-      <button class="modal-button" @click="close">OK</button>-->
+      <!-- OK button to close modal -->
+      <button class="modal-button" @click="close">OK</button>
     </div>
   </div>
 </template>
@@ -74,20 +72,6 @@ const close = () => emit("close");
   to { opacity: 1; transform: scale(1); }
 }
 
-/* Close button (X) */
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 16px;
-  color: var(--black-color);
-  font-size: 1.8rem;
-  font-weight: bold;
-  cursor: pointer;
-}
-.close-btn:hover {
-  color: var(--orange-color);
-}
-
 /* Modal title style */
 .modal-title {
   font-family: var(--font-secondary);
@@ -105,7 +89,7 @@ const close = () => emit("close");
   line-height: 1.4;
 }
 
-/* OK button style 
+/* OK button style */
 .modal-button {
   background-color: var(--orange-color);
   color: var(--black-color);
@@ -118,5 +102,5 @@ const close = () => emit("close");
 .modal-button:hover {
   background-color: var(--light-yellow-color);
   border: 2px solid var(--orange-color);
-}*/
+}
 </style>
