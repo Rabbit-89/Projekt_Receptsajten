@@ -86,13 +86,16 @@ onMounted(async () => {
 const currentRating = ref(0);
 const userHasRated = ref(false);
 
-// Ny funktion som hanterar röstning direkt
+// Funktion som hanterar röstning 
 const handleRating = async (stars) => {
   currentRating.value = stars; // Uppdatera stjärnorna på skärmen
   
   try {
     // Skicka till API direkt via vår service-funktion
     await postRating(route.params.id, stars);
+
+    // Hämta receptet igen för att uppdatera snittbetyget direkt 
+    recipe.value = await fetchRecipeById(route.params.id);
     
     // Visa tack-meddelandet
     userHasRated.value = true;

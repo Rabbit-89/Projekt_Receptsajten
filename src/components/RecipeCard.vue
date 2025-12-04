@@ -19,9 +19,15 @@ const props = defineProps({
 // Calculate the number of ingredients in the recipe
 const ingredientsCount = computed(() => props.recipe.ingredients?.length || 0);
 
+// En smart variabel. Varje gång ny data kommer in (t.ex. någon röstar), räknas den här koden om automatiskt så att snittbetyget alltid är uppdaterat.
 const rating = computed(() => {
-    if (props.recipe.ratings?.length > 0) {
-        const avg = props.recipe.ratings.reduce((sum, r) => sum + (r.rating || 0), 0) / props.recipe.ratings.length
+    if (props.recipe.ratings?.length > 0) { // Här görs en säkerhetskoll: "Finns det några betyg alls?"
+        // Detta är en loop som går igenom alla betyg för att räkna ut en totalsumma
+        const avg = props.recipe.ratings.reduce((sum, r) => {
+            // Kolla om det är en siffra eller ett objekt 
+            const ratingValue = typeof r === 'number' ? r : (r.rating || 0)
+            return sum + ratingValue
+        }, 0) / props.recipe.ratings.length
         return avg.toFixed(1)
     }
     return '0'
