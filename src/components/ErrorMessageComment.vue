@@ -47,7 +47,7 @@ const close = () => emit("close");
   position: fixed;
   z-index: 9999;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.7); /* Dark overlay for dark mode */
+  background-color: rgba(0, 0, 0, 0.7); 
   display: flex;
   justify-content: center;
   align-items: center;
@@ -85,7 +85,7 @@ const close = () => emit("close");
   cursor: pointer;
 }
 .close-btn:hover {
-  color: var(--orange-color); /* Slight red hover effect */
+  color: var(--orange-color);
 }
 
 /* Modal title style */
