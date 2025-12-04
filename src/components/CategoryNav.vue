@@ -97,7 +97,7 @@ onMounted(() => {
         :to="{ name: 'category', params: { categoryId: category.categoriesData } }" :aria-current="$route.params.categoryId === category.categoriesData ? 'page':undefined ">
         <div class="category-icon">
           <!--Different icons for each category-->
-          <img :src="getCategoryIcon(category.categoriesData)" :alt="category.name"></img>
+          <img :src="getCategoryIcon(category.categoriesData)" :alt="category.name" class="category-svg"></img>
         </div>
         <div class="category-content">{{ category.name }}</div>
         <div class="recipeCount">{{ category.recipeCount }} Recipes</div>
@@ -168,12 +168,21 @@ h1 {
   min-width: 150px;
 }
 
+
 .category-nav a:hover {
   transform: translateY(-4px);
   /* Lift effect on hover */
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  border-radius: 5rem;
 }
 
+.category-nav a.router-link-exact-active{
+    transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  background-color: var(--white-color);
+  border-radius: 5rem;
+ }
+ 
 @media screen and (min-width: 576px) {
 
   /* ... */
@@ -181,7 +190,12 @@ h1 {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
   }
-
+.category-nav a.router-link-exact-active{
+    transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  background-color: var(--white-color);
+  border-radius: 5rem;
+ }
 
 }
 
@@ -194,7 +208,15 @@ h1 {
     /*displays the categories in a row*/
     grid-template-columns: repeat(3, 1fr);
   }
+.category-nav a.router-link-exact-active{
+    transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  background-color: var(--white-color);
+  border-radius: 5rem;
+ }
+ 
 }
+
 
 /* Styles for large screens */
 @media screen and (min-width: 1200px) {
@@ -205,5 +227,12 @@ h1 {
     /*displays the categories in a row*/
     grid-template-columns: repeat(2, 1fr);
   }
+.category-nav a.router-link-exact-active{
+    transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  background-color: var(--white-color);
+  border-radius: 5rem;
+ }
+
 }
 </style>
