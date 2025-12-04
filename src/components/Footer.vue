@@ -45,13 +45,11 @@
 
     <!-- Footer Bar -->
     <div class="footer-bar">
-      <router-link to="/about" class="logo-link">
         <img
           src="@/assets/social/chas_logo.svg"
           class="logo"
           alt="ChasAcademy logo"
         />
-      </router-link>
       <p>
         &copy; ChasAcademy | FUX25  | Grupp A
       </p>

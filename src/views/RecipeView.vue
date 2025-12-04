@@ -6,7 +6,7 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { useRoute, RouterLink } from "vue-router";
-import { fetchRecipeById, postRating } from "../services/api";
+import { fetchRecipeById, postRating, postComment, fetchComments } from "../services/api";
 import Checklist from "../components/Checklist.vue";
 import Breadcrumbs from "../components/Breadcrumbs.vue";
 import RecipeHeader from "../components/RecipeHeader.vue";
@@ -64,16 +64,22 @@ onMounted(async () => {
   const recipeId = route.params.id;
   loading.value = true; // Show loading spinner when data is being fetched
   error.value = false; // Reset error state
-  
+
   try {
     recipe.value = await fetchRecipeById(recipeId);
-    if (!recipe.value.comments) recipe.value.comments = []; 
+
+    // Ensure comments array exists
+    const comments = await fetchComments(recipeId);
+    recipe.value.comments = comments || [];
+   
   } catch (err) {
-    console.error("Failed to load recipe:", err);
-    error.value = true; // Show error message if something went wrong
-    recipe.value = null; // Clear recipe data if there's an error
+    console.error("Failed to load recipe or comments", err);
+    error.value = true;   // Show error message if something went wrong
+
+    recipe.value = null;  // Clear recipe data if there's an error
+
   } finally {
-    loading.value = false; // Hide loading spinner when data is loaded
+    loading.value = false;   // Hide loading spinner when data is loaded
   }
 });
 
@@ -99,38 +105,58 @@ const handleRating = async (stars) => {
 
 // --- COMMENT FORM ---
 const newName = ref("");
-const newText = ref("");
+const newComment = ref("");
 const thanks = ref(false);
 
-const addComment = async () => {
+/*
+  NEW: Add comment using API and push the returned comment into recipe.comments.
+*/
+const addComment = async async () => {
   const name = newName.value.trim();
-  const text = newText.value.trim();
+  const comment = newComment.value.trim();
 
-  if (!name || !text) {
+  if (!name || !comment) {
     alert("Please fill in the required fields: Name and Comment");
     return;
   }
 
-  const newComment = {
-    author: name,
-    text: text,
-    date: new Date().toISOString(),
-    replies: []
-  };
+  try {
+    // Send the comment to the API
+    const savedComment = await postComment(route.params.id, name, comment);
 
-  if (!recipe.value.comments) recipe.value.comments = [];
-  recipe.value.comments.push(newComment);
+    /*
+      The API returns this structure:
+      {
+        name: "...",
+        comment: "...",
+        createdAt: "2025-02-01T12:00:00Z"
+      }
+    */
 
-  // Reset form fields
-  newName.value = "";
-  newText.value = "";
+    // Add the returned comment into the list
+    recipe.value.comments.push({
+      name: savedComment.name,
+      comment: savedComment.comment,
+      createdAt: savedComment.createdAt
+    });
 
-  // Show thank you message
-  thanks.value = true;
-  setTimeout(() => {
-    thanks.value = false;
-  }, 3000);
+    // Reset form fields
+    newName.value = "";
+    newComment.value = "";
+        
+    console.log(savedComment);  // For debugging
+    // Show thank you message
+    thanks.value = true;
+    setTimeout(() => {
+      thanks.value = false;
+    }, 3000);
+
+  } catch (error) {
+    console.error("Failed to submit comment:", error);
+    alert("Could not send your comment. Please try again.");
+  }
 };
+
 </script>
 
 <template>
@@ -196,25 +222,22 @@ const addComment = async () => {
       </p>
     </div>
 
-    <!-- Comment form -->
+    <!-- Add Comment -->
     <div class="add-comment">
       <h3>Leave a comment</h3>
-      <label>
-        Name 
-      </label>
+
+      <label>Name</label>
       <input v-model="newName" type="text" placeholder="Type your name" />
 
-      <label>
-        Comment
-      </label>
-      <textarea v-model="newText" rows="4" placeholder="Type your comment"></textarea>
+      <label>Comment</label>
+      <textarea v-model="newComment" rows="4" placeholder="Type your comment"></textarea>
 
       <button @click="addComment">Send Comment</button>
 
       <p v-if="thanks" class="thanks-text">Thanks for your comment!</p>
     </div>
 
-    <!-- Comments list -->
+    <!-- Comments -->
     <div class="comments-wrapper">
       <h3>{{ commentsCount }} Comments</h3>
       <hr />
