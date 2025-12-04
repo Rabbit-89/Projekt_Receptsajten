@@ -35,8 +35,8 @@ const close = () => emit("close");
       <!-- Modal message -->
       <p class="modal-message">{{ message }}</p>
 
-      <!-- OK button to close modal -->
-      <button class="modal-button" @click="close">OK</button>
+      <!-- OK button to close modal --
+      <button class="modal-button" @click="close">OK</button>-->
     </div>
   </div>
 </template>
@@ -105,7 +105,7 @@ const close = () => emit("close");
   line-height: 1.4;
 }
 
-/* OK button style */
+/* OK button style 
 .modal-button {
   background-color: var(--orange-color);
   color: var(--black-color);
@@ -117,6 +117,6 @@ const close = () => emit("close");
 }
 .modal-button:hover {
   background-color: var(--light-yellow-color);
-  border: 2px solid var(--orange-color); /* Highlight on hover */
-}
+  border: 2px solid var(--orange-color);
+}*/
 </style>
