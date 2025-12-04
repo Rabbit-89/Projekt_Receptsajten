@@ -53,6 +53,21 @@ export async function fetchCategories() {
 }
 
 /**
+ * Fetches all available recipe Ratings
+ * returns Array of rating objects
+ * throws Error If the API request fails
+ */
+export async function fetchRatings(recipeId) {
+  const response = await fetch(`${API_BASE_URL}/${TEAM_ID}/recipes/${recipeId}/ratings`)
+  
+  if (!response.ok) {
+    throw new Error('Failed to fetch ratings')
+  }
+  
+  return response.json()
+}
+
+/**
  * Posts a rating for a specific recipe
  * param recipeId - The ID of the recipe
  * param rating - The rating value (number)
