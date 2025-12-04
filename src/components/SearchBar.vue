@@ -1,17 +1,6 @@
 <script setup >
 import { ref, watch } from "vue";
 
-/*
-const searchQuery = ref("");
-
- Use ref() för att lagra asynkron data 
-const allRecipes = ref([]);
-const allCategories = ref([]);
-
-/* Status for loading and error 
-const loading = ref(true);
-const error = ref(false);*/ 
-
 /*using emit to export the recipecard */
 const emit = defineEmits(['search-update']);
 
@@ -29,82 +18,7 @@ const executeSearch = () => {
     console.log("Searching for:", localSearchQuery.value);
 }
 
-/*Fel hantering och uploading data 
-onMounted(async () => {
-    loading.value = true;
-    error.value = false;
 
-  try {
-    const [recipes, categories] = await Promise.all([
-      fetchRecipes(),
-      fetchCategories()
-    ]); */
-
-    /*The value will get uppdated when the data is getting fetch 
-    allRecipes.value = recipes;
-    allCategories.value = categories;
-
-  } catch (error) {
-    console.error("Fel vid hämtning av datan", error);
-    error.value = true;  // sätt felstatus vid misslyckande
-  } finally {
-    loading.value = false;  // sätt loading till false när hämtningen är klar
-  }
-});*/
-
-/*using watch to send out the list everytime it changed 
-watch(filteredRecipes, (newValue) => {
-    emit('update:filteredRecipes', newValue);
-},
-    { immediate: true } // skicka den initiala värdet vid början
-); */
-
-
-/*
-const getCategoryName = (categoryId) => {
-    const category = allCategories.value.find((cat) => {
-        return String(cat.id) === String(categoryId);
-    });
-    return category ? category.name : "Okänd kategori";
-}
-
-
-/*Sök logiken 
-const filteredRecipes = computed(() => {
-
-    if (loading.value || error.value) {
-        return [];
-    }
-
-    const query = searchQuery.value.trim().toLowerCase();
-
-    /*Using .value to get access to the recipes data 
-    if (!query) {
-        return allRecipes.value;
-    }
-
-    return allRecipes.value.filter(recipe => {
-        const matchName = recipe.name?.toLowerCase().includes(query) || false;
-        const categoryName = getCategoryName(recipe.categoryId) || "";
-
-        const matchCategory = categoryName?.toLowerCase().includes(query) || false;*/
-
-        /*Ingredients searching 
-        const title = recipe.name?.toLowerCase().includes(query);
-        const ingredients = recipe.ingredients?.map(ing => ing.toLowerCase()).join("");
-        const matchIngredients = ingredients.includes(query);
-        const description = recipe.description?.toLowerCase().includes(query) || false;
-
-        return matchName || matchCategory || matchIngredients || title || description;
-    });
-    
-});*/
-
-/*
-const executeSearch = () => {
-    // This function is a method to handle the searchbar when the User uses the search button
-    console.log("Searching for:", searchQuery.value);
-}; */
 
 </script >
 
@@ -113,8 +27,8 @@ const executeSearch = () => {
     <form class="search-bar" @submit.prevent="executeSearch">
         
         <div class="search-container">
-            <input type="text" v-model="localSearchQuery" placeholder="Search our recipes by name, categories or ingredients.." class="search-input" />
-            <span class="search-icon-static">🔍</span> 
+            <input type="text" v-model="localSearchQuery" placeholder="Search..." class="search-input" />
+            <span class="search-icon"><img class="icon" src="../assets/icon_search.png"/></span> 
         </div>
 
         <button type="submit" class="search-button">
@@ -128,6 +42,7 @@ const executeSearch = () => {
 <style scoped>
 /* 1. Flex container för att arrangera fält och knapp */
 .search-bar {
+    position: relative;
   display: flex;
   gap: 10px; 
   padding: 20px;
@@ -148,6 +63,7 @@ const executeSearch = () => {
 
 /* 3. Själva inmatningsfältet */
 .search-input {
+  position: relative;
   width: 100%;
   padding: 12px 15px 12px 15px; 
   border: none;
@@ -157,34 +73,11 @@ const executeSearch = () => {
   box-sizing: border-box; 
 }
 
-.search-icon-static {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 1.2rem;
-    pointer-events: none;
-}
-
 .search-input:focus {
   outline: none; /* Ta bort standard-focus-ramen */
 
 }
 
-/* 4. Sökikonen (Förstoringsglaset) */
-.search-icon {
-  position: absolute ;
-  left: 5px; 
-  top: 50%;
-  transform: translateY(-50%); 
-  pointer-events: none; /* Gör att klick passerar igenom till input */
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--white-color); 
-  line-height: 1;
-  padding: 0;
-}
 
 /* 5. Sökknappen */
 .search-button {
@@ -202,5 +95,49 @@ const executeSearch = () => {
 
 .search-button:hover {
   background-color: var(--brown-color); 
+
 }
+
+.search-icon {
+  position: absolute;
+  right: 10px;
+  bottom: 0px;
+}
+
+.icon {
+  top: 50%;
+  transform: translateY(-50%); 
+  /*pointer-events: none; /* Gör att klick passerar igenom till input 
+  background: none;
+  border: none;
+  cursor: pointer; */
+  line-height: 1;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+
+}
+
+@media screen and (max-width: 480px) {
+  .search-bar {
+    flex-direction: row; 
+    position: relative;
+  }
+
+}
+
+@media screen and (max-width: 768px) {
+  .search-input {
+    position: relative;
+    font-size: 0.9rem;
+}
+
+}
+
+@media screen and (max-width: 1024px) { 
+    .search-input {
+    font-size: 1rem;
+}
+}
+
 </style>
