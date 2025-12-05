@@ -4,7 +4,6 @@ import { useRoute } from 'vue-router'
 import RecipeCard from '../components/RecipeCard.vue'
 import { fetchRecipes, fetchCategories } from '@/services/api';
 import CategoryNav from '@/components/CategoryNav.vue';
-import SearchBar from '@/components/SearchBar.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import ErrorMessage from '@/components/ErrorMessage.vue';
 
@@ -82,8 +81,6 @@ watch(() => route.params.categoryId, (newCategoryId) => {
 <template>
   <main class="category-container">
     <CategoryNav />
-    
-    <SearchBar />
 
     <h1 v-if="!loading && !error && !categoryNotFound" class="page-title">{{ displayTitle }}</h1>
 
