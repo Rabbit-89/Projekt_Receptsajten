@@ -111,7 +111,7 @@ const formatDate = (dateString) => {
 }
 
 .comment-date {
-  color: gray;
+  color: var(--dark-gray-color);  /* Contrast color for date deleted gray skriva dark-gray-color som finns i Base.css*/
   font-size: 0.8rem;
   margin: 0.2rem 0;
 }
