@@ -11,10 +11,10 @@ import Checklist from "../components/Checklist.vue";
 import Breadcrumbs from "../components/Breadcrumbs.vue";
 import RecipeHeader from "../components/RecipeHeader.vue";
 import Rating from "../components/Rating.vue";
-import Comment from '../components/Comment.vue'
-import LoadingSpinner from '../components/LoadingSpinner.vue';
-import ErrorMessage from '../components/ErrorMessage.vue';
-
+import Comment from "../components/Comment.vue";
+import LoadingSpinner from "../components/LoadingSpinner.vue";
+import ErrorMessage from "../components/ErrorMessage.vue";
+import CommentForm from "@/components/CommentForm.vue";
 
 const route = useRoute();
 const recipe = ref(null);
@@ -85,12 +85,11 @@ onMounted(async () => {
 
   } catch (err) {
     console.error("Failed to load recipe or comments", err);
-    error.value = true;   // Show error message if something went wrong
+    error.value = true; // Show error message if something went wrong
 
-    recipe.value = null;  // Clear recipe data if there's an error
-
+    recipe.value = null; // Clear recipe data if there's an error
   } finally {
-    loading.value = false;   // Hide loading spinner when data is loaded
+    loading.value = false; // Hide loading spinner when data is loaded
   }
 });
 
@@ -176,16 +175,16 @@ const addComment = async () => {
 <template>
   <!-- Show loading spinner while data is being fetched -->
   <LoadingSpinner v-if="loading" message="Loading recipe..." />
-  
+
   <!-- Show error message if something went wrong -->
   <div v-else-if="error" class="error-wrapper">
-    <ErrorMessage 
+    <ErrorMessage
       title="Recipe not found"
       message="We couldn't load this recipe. It may not exist or there was an error."
     />
     <RouterLink to="/" class="back-link">← Back to recipes</RouterLink>
   </div>
-  
+
   <!-- Main recipe view - only shown when recipe data is loaded -->
   <main class="recipe-view" v-else-if="recipe">
     <!-- Navigation breadcrumbs -->
@@ -236,29 +235,22 @@ const addComment = async () => {
       </p>
     </div>
 
-    <!-- Add Comment -->
-    <div class="add-comment">
-      <h3>Leave a comment</h3>
+    <!-- Add CommentForm -->
+    <CommentForm
+      :recipe-id="route.params.id"
+      @comment-added="recipe.comments.push($event)"
+    />
 
-      <label>Name</label>
-      <input v-model="newName" type="text" placeholder="Type your name" />
-
-      <label>Comment</label>
-      <textarea v-model="newComment" rows="4" placeholder="Type your comment"></textarea>
-
-      <button @click="addComment">Send Comment</button>
-
-      <p v-if="thanks" class="thanks-text">Thanks for your comment!</p>
-    </div>
-
-    <!-- Comments -->
+    <!-- Comments section -->
     <div class="comments-wrapper">
       <h3>{{ commentsCount }} Comments</h3>
-      <hr />
+    
+      <!-- Show Comments List -->
       <Comment
         v-for="(c, index) in recipe.comments"
         :key="index"
         :comment="c"
+        :comments-count="recipe.comments.length"
       />
     </div>
   </main>
@@ -367,7 +359,7 @@ const addComment = async () => {
   margin-top: 2rem;
   padding-top: 1.5rem;
 }
-.add-comment h3,
+
 .comments-wrapper h3 {
   font-family: var(--font-secondary);
   font-size: 1.8rem;
@@ -387,45 +379,4 @@ const addComment = async () => {
   margin-bottom: 1rem;
 }
 
-.add-comment {
-  margin-top: 3rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.add-comment label {
-  font-family: var(--font-secondary);
-  display: flex;
-  flex-direction: column;
-  font-weight: 500;
-}
-
-.add-comment input,
-.add-comment textarea {
-  margin-top: 0.3rem;
-  padding: 0.5rem;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-family: var(--font-main);
-}
-
-.add-comment button {
-  align-self: flex-start;
-  padding: 7px 24px;
-  background: #573311;
-  color: white;
-  border: none;
-  border-radius: 30px;
-  cursor: pointer;
-}
-
-.add-comment button:hover {
-  border: 2px solid #f9ae4a;
-  background-color: var(--brown-color);
-  color: white;
-}
 </style>
