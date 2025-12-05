@@ -6,7 +6,7 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { useRoute, RouterLink } from "vue-router";
-import { fetchRecipeById, fetchComments } from "../services/api";
+import { fetchRecipeById, postRating, fetchRatings, postComment, fetchComments } from "../services/api";
 import Checklist from "../components/Checklist.vue";
 import Breadcrumbs from "../components/Breadcrumbs.vue";
 import RecipeHeader from "../components/RecipeHeader.vue";
@@ -45,14 +45,24 @@ const breadcrumbs = computed(() => {
 const ingredientsCount = computed(() => recipe.value?.ingredients?.length || 0);
 
 const rating = computed(() => {
-  if (!recipe.value) return "0";
+  // Om inget recept finns än, visa 0
+  if (!recipe.value) return 0;
+
+  // Om det finns betyg
   if (recipe.value.ratings?.length > 0) {
-    const avg =
-      recipe.value.ratings.reduce((sum, r) => sum + (r.rating || 0), 0) /
-      recipe.value.ratings.length;
+    const avg = recipe.value.ratings.reduce((sum, r) => {
+     
+      // Vi kollar: Är 'r' en siffra? Använd den. Annars hämta .rating eller .value
+      const ratingValue = typeof r === 'number' ? r : (r.rating || r.value || 0);
+      return sum + ratingValue;
+    }, 0) / recipe.value.ratings.length;
+
+    // Returnera med 1 decimal (t.ex. 4.5)
     return avg.toFixed(1);
   }
-  return "0";
+  
+  // Om inga betyg finns
+  return 0;
 });
 
 const commentsCount = computed(() => recipe.value?.comments?.length || 0);
@@ -68,6 +78,11 @@ onMounted(async () => {
     // Ensure comments array exists
     const comments = await fetchComments(recipeId);
     recipe.value.comments = comments || [];
+   
+    // Hämtar betyget 
+    const ratings = await fetchRatings(recipeId);
+    recipe.value.ratings = ratings || [];
+
   } catch (err) {
     console.error("Failed to load recipe or comments", err);
     error.value = true; // Show error message if something went wrong
@@ -80,6 +95,80 @@ onMounted(async () => {
 
 const currentRating = ref(0);
 const userHasRated = ref(false);
+
+// Funktion som hanterar röstning 
+const handleRating = async (stars) => {
+  currentRating.value = stars; // Uppdatera stjärnorna på skärmen
+  
+  try {
+    // Skicka till API direkt via vår service-funktion
+    await postRating(route.params.id, stars);
+
+    // Hämta det uppdaterade betyg direkt
+    const updatedRatings = await fetchRatings(route.params.id);
+    recipe.value.ratings = updatedRatings || [];
+    
+    userHasRated.value = true;
+
+  } catch (error) {
+    console.error(error);
+    alert("Kunde inte spara betyget.");
+  }
+};
+
+// --- COMMENT FORM ---
+const newName = ref("");
+const newComment = ref("");
+const thanks = ref(false);
+
+/*
+  NEW: Add comment using API and push the returned comment into recipe.comments.
+*/
+const addComment = async () => {
+  const name = newName.value.trim();
+  const comment = newComment.value.trim();
+
+  if (!name || !comment) {
+    alert("Please fill in the required fields: Name and Comment");
+    return;
+  }
+
+  try {
+    // Send the comment to the API
+    const savedComment = await postComment(route.params.id, name, comment);
+
+    /*
+      The API returns this structure:
+      {
+        name: "...",
+        comment: "...",
+        createdAt: "2025-02-01T12:00:00Z"
+      }
+    */
+
+    // Add the returned comment into the list
+    recipe.value.comments.push({
+      name: savedComment.name,
+      comment: savedComment.comment,
+      createdAt: savedComment.createdAt
+    });
+
+    // Reset form fields
+    newName.value = "";
+    newComment.value = "";
+        
+    console.log(savedComment);  // For debugging
+    // Show thank you message
+    thanks.value = true;
+    setTimeout(() => {
+      thanks.value = false;
+    }, 3000);
+
+  } catch (error) {
+    console.error("Failed to submit comment:", error);
+    alert("Could not send your comment. Please try again.");
+  }
+};
 
 </script>
 
@@ -134,8 +223,8 @@ const userHasRated = ref(false);
     <div class="rating-section">
       <h3>Did you enjoy cooking this meal?</h3>
       <Rating
-        v-model="currentRating"
-        @update:modelValue="userHasRated = true"
+        :modelValue="currentRating"
+        @update:modelValue="handleRating"
         class="interactive-stars"
       />
       <p v-if="userHasRated" class="thank-you-text">

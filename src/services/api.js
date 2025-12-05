@@ -52,8 +52,43 @@ export async function fetchCategories() {
   return response.json()
 }
 
+export async function fetchRatings(recipeId) {
+  const response = await fetch(`${API_BASE_URL}/${TEAM_ID}/recipes/${recipeId}/ratings`)
+  if (!response.ok) {
+    throw new Error('Failed to fetch ratings')
+  }
+  return response.json()
+}
+
 /**
- * Fetches all available recipe comments
+ * Posts a rating for a specific recipe
+ * param recipeId - The ID of the recipe
+ * param rating - The rating value (number)
+ * throws Error If the API request fails
+ */
+export async function postRating(recipeId, rating) {
+  const response = await fetch(`${API_BASE_URL}/${TEAM_ID}/recipes/${recipeId}/ratings`, {
+    
+    method: 'POST', 
+    headers: {      
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(rating)
+  })
+
+  if (!response.ok) {
+    throw new Error('Failed to post rating')
+  }
+  
+  // Om servern svarar 204 (No Content), får vi inte köra .json()
+  if (response.status === 204) {
+    return null
+  }
+  
+  return response.json()
+}
+
+ /** Fetches all available recipe comments
  * returns Array of comment objects
  * throws Error If the API request fails
  */
@@ -66,7 +101,6 @@ export async function fetchComments(recipeId) {
 }
 
 /**
- * NEW FUNCTION:
  * Posts a comment for a specific recipe
  *
  * - recipeId: ID of the recipe
