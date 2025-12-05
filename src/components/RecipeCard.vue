@@ -40,17 +40,17 @@ const rating = computed(() => {
     <div class="recipe-card">
         <div class="recipe-image">
             <img :src="recipe.imageUrl" :alt="recipe.title"/>
-            <!-- Fix category title display on image -->
-            <span class="recipe-category-title"> {{ recipe.categories[0] }}</span>
+            <!-- Suzan Code: Fix category title display on image -
+            <span class="recipe-category-title"> {{ recipe.categories[0] }}</span>-->
         </div>
         <div class="recipe-content">
             <h2 class="recipe-title">{{ recipe.title }}</h2>
             <div class="recipe-details">
                 <span class="recipe-detail-item"> <img src="@/assets/icons/time.svg" alt="Clock" /> {{ recipe.timeInMins }} min</span>
-                <!--<span class="recipe-detail-item"> {{ ingredientsCount }} ingredients</span>-->
+                <span class="recipe-detail-item"> {{ ingredientsCount }} ingredients</span>
                 
-                <!-- Use pipe as separator instead of ingredients count samma i Figma Design -->
-                <span class="pipe-tecknet-item">|</span> 
+                <!-- Suzan Code: Use pipe as separator instead of ingredients count samma i Figma Design -
+                <span class="pipe-tecknet-item">|</span> -->
                 <span class="recipe-detail-item"> <img src="@/assets/icons/star.svg" alt="Star" /> {{ rating }}</span>
             </div>
             <p class="recipe-description">{{ recipe.description }}</p>
@@ -89,22 +89,7 @@ const rating = computed(() => {
   width: 100%;
   height: 200px;
   overflow: hidden;
-  position: relative;
-}
-
-.recipe-category-title {
-  position: absolute;       /* Position relative to parent */
-  bottom: 2px;             /* 10px from bottom */
-  right: 2px;              /* 10px from right */
-  background-color: var(--light-yellow-color); 
-  color: var(--brown-color);     
-  padding: 4px 8px;         
-  border-radius: 2px;       
-  font-size: 12px;          
-  font-weight: 500;
-  text-transform: uppercase; /* Optional: make it uppercase */
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3); /* Slight shadow for readability */
-  pointer-events: none;     /* Avoid blocking clicks on image */
+  position: relative;  /* Suzan code: For positioning category title overlay */
 }
 
 .recipe-image img {
@@ -162,4 +147,21 @@ const rating = computed(() => {
   text-align: center;
   margin-top: 1rem;
 }
+
+
+/* Suzan Code: fix category title on -image
+.recipe-category-title {
+  position: absolute;      
+  bottom: 2px;             
+  right: 2px;            
+  background-color: var(--light-yellow-color); 
+  color: var(--brown-color);     
+  padding: 4px 8px;         
+  border-radius: 2px;       
+  font-size: 12px;          
+  font-weight: 500;
+  text-transform: uppercase; 
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3); 
+  pointer-events: none;  
+}*/
 </style>
