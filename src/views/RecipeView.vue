@@ -331,7 +331,7 @@ const addComment = async () => {
 }
 
 .help-text {
-  color: var(--dark-gray-color);
+  color: var(--gray-color);   /* Replaced dark gray with --gray-color to meet accessibility contrast requirements from Lighthouse */
   font-style: italic;
   font-size: 0.9rem;
 }

@@ -28,7 +28,9 @@ const executeSearch = () => {
         
         <div class="search-container">
             <input type="text" v-model="localSearchQuery" placeholder="Search..." class="search-input" />
-            <span class="search-icon"><img class="icon" src="../assets/icon_search.png"/></span> 
+            <span class="search-icon">
+              <img class="icon" src="../assets/icon_search.png" alt="search icon bild"/> <!--Image elements do not have [alt] attributes-->
+            </span> 
         </div>
 
         <button type="submit" class="search-button">
@@ -82,7 +84,7 @@ const executeSearch = () => {
 /* 5. Sökknappen */
 .search-button {
   background-color: var(--gold-color); 
-  color: var(--white-color);
+  color: var(--black-color);  /* Changed from white-color to balck for better contrast */
   padding: 10px 25px;
   border: none;
   border-radius: 8px; 

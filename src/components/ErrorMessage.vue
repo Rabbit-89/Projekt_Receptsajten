@@ -19,7 +19,7 @@ defineEmits(['retry'])
 
 <template>
   <div class="error-container">
-    <h3 class="error-title">{{ title }}</h3>
+    <h2 class="error-title">{{ title }}</h2>  <!--- Heading elements are not in a sequentially-descending order så byta från <h3> till <h2>-->
     <p class="error-message">{{ message }}</p>
     <button v-if="showRetry" @click="$emit('retry')" class="retry-button">
       Try Again
@@ -48,7 +48,7 @@ defineEmits(['retry'])
 .error-message {
   font-family: var(--font-main);
   font-size: 1rem;
-  color: var(--dark-gray-color);
+  color: var(--gray-color);
   margin: 0;
   max-width: 500px;
 }
