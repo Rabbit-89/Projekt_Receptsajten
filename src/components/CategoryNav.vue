@@ -88,7 +88,9 @@ onMounted(() => {
     <h1>Categories</h1>
     <div class="category-nav">
       <router-link :to="{ name: 'home' }" :class="{ active: !$route.params.categoryId }" :aria-current="$route.name === 'home' ? 'page':undefined ">
-        <img src="../assets/icon_allRecipes.svg" alt="All Recipes Icon"></img>
+        <div class="allRecipes-svg-container">
+          <img src="../assets/icon_allRecipes.svg" alt="All Recipes Icon" class="allRecipes-svg"></img>
+        </div>
         All Recipes
         <div class="numberOfRecipes">{{ totalRecipes }} Recipes</div>
       </router-link>
@@ -112,7 +114,7 @@ h1 {
   display: flex;
   color: var(--color-black);
   font-family: Cormorant;
-  font-size: 5rem;
+  font-size: 4.5rem;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
@@ -121,6 +123,20 @@ h1 {
   padding: .5rem;
 }
 
+/* For the All Recipes icon */
+.allRecipes-svg-container {
+  width: 10.28rem; /* Same as category-icon */
+  height: auto; /* Same as category-icon */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+.category-svg, .allRecipes-svg {
+  width: 100%;
+  height: auto;
+  margin-bottom: 1rem;
+}
 .category-box {
   width: 100%;
   height: auto;
@@ -132,7 +148,7 @@ h1 {
 
 .numberOfRecipes,
 .recipeCount {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   color: var(--dark-gray-color);
   font-weight: 400;
   margin-top: 0.5rem;
@@ -147,7 +163,7 @@ h1 {
   justify-content: center;
   align-items: center;
   font-family: var(--font-main);
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   height: 100%;
   list-style-type: none;
   padding: 0;
