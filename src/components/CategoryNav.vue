@@ -114,7 +114,7 @@ h1 {
   display: flex;
   color: var(--color-black);
   font-family: Cormorant;
-  font-size: 4.5rem;
+  font-size: 3rem;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
@@ -124,14 +124,14 @@ h1 {
 }
 
 /* For the All Recipes icon */
-.allRecipes-svg-container {
-  width: 10.28rem; /* Same as category-icon */
-  height: auto; /* Same as category-icon */
+/* .allRecipes-svg-container {
+  width: 10rem;
+  height: auto; 
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 1rem;
-}
+} */
 .category-svg, .allRecipes-svg {
   width: 100%;
   height: auto;
@@ -201,6 +201,19 @@ h1 {
  
 @media screen and (min-width: 576px) {
 
+h1 {
+  display: flex;
+  color: var(--color-black);
+  font-family: Cormorant;
+  font-size: 4.5rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  align-items: center;
+  justify-content: center;
+  padding: .5rem;
+}
+
   /* ... */
   .category-nav {
     display: grid;
@@ -237,6 +250,18 @@ h1 {
 /* Styles for large screens */
 @media screen and (min-width: 1200px) {
 
+  h1 {
+  display: flex;
+  color: var(--color-black);
+  font-family: Cormorant;
+  font-size: 4.5rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  align-items: center;
+  justify-content: center;
+  padding: .5rem;
+}
   /* ... */
   .category-nav {
     display: flex;
