@@ -17,12 +17,12 @@ import Navigation from './Navigation.vue';
 <style scoped>
 h1 {
     font-family: var(--font-secondary);
-    font-size: 5rem;
+    font-size: 4.5rem;
 }
 
 p {
     font-family: var(--font-main);
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-style: normal;
     line-height: 2rem;
     /* 160% */
