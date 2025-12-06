@@ -17,7 +17,10 @@ import Navigation from './Navigation.vue';
 <style scoped>
 h1 {
     font-family: var(--font-secondary);
-    font-size: 4.5rem;
+    font-size: 3rem;
+    line-height: 4rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
 }
 
 p {
@@ -64,5 +67,32 @@ p {
     padding: 2rem;
     height: 100%;
     margin-top: 10%;
+}
+/* * Styles for medium screens (e.g.tablet, laptops) */ 
+@media screen and (min-width: 768px) {
+    h1 {
+    font-family: var(--font-secondary);
+    font-size: 4rem;
+    line-height: 4rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+    .hero-content {
+        margin-top: 15%;
+    }
+}
+
+/* * Styles for large screens */
+@media screen and (min-width: 1200px) {
+    h1 {
+    font-family: var(--font-secondary);
+    font-size: 4.5rem;
+    line-height: 4rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+    .hero-content {
+        margin-top: 10%;
+    }
 }
 </style>
