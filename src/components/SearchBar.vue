@@ -1,4 +1,4 @@
-<script setup >
+<script setup>
 import { ref, watch } from "vue";
 
 /*using emit to export the recipecard */
@@ -20,7 +20,7 @@ const executeSearch = () => {
 
 
 
-</script >
+</script>
 
 <template>
 
