@@ -55,42 +55,49 @@ onMounted(async () => {
   }
 });
 
-/* Filtrerings logiken, används computed() för 
-
+/* Filtrerings logiken, används computed() för att skapa en reaktiv egenskap
 */
 const filteredRecipes = computed(() => {
+    if (allRecipes.value.length > 0) {
+      console.log("Första recept:", allRecipes.value[0]);
+    };
 
     const query = searchQuery.value.trim().toLowerCase();
+    
 
     /*Using .value to get access to the recipes data */
     if (!query) {
         return allRecipes.value;
-    }
+        
+    } 
+    
 
     return allRecipes.value.filter(recipe => {
-
-        // Search in name
-        const matchName = recipe.name?.toLowerCase().includes(query) || false;  
         
+      console.log("Query:",query);
+        // Search in name
+        const matchName = recipe.title?.toLowerCase().includes(query) || false;  
+        console.log("Recipe name",recipe.title)
+        console.log("Match name:", matchName);
+
         // Search in ingredients
-        const ingredients = (recipe.ingredients || []).map(ing => ing.toLowerCase()).join("");
-        const matchIngredients = ingredients.includes(query);
+        const ingredients = recipe.ingredients || [];
+        const matchIngredients = ingredients.map(ing => ing.toLowerCase()).join("").includes(query);
 
+        // kontrollera om kategorierna är en sträng av array
+        const categoriesArray = Array.isArray(recipe.categories) ? recipe.categories : [];
 
-        // Search in category name
-        const getCategoryName = (categoryId) => {
-            if (allCategories.value.length === 0) return "";
-            const category = allCategories.value.find(cat => String(cat.id) === String(categoryId));
-            return category ? category.name : ""; 
-        };
-        const categoryName = getCategoryName(recipe.categoryId) || "";  
-        const matchCategory = categoryName?.toLowerCase().includes(query) || false;
+        // skapa n sträng av alla kategorierna för enkel sökning, ändrades categoryId till categories för att matcha med API:et
+        const categoriesString = categoriesArray.join(" ").toLowerCase();  
+        const matchCategory = categoriesString?.toLowerCase().includes(query); // använda Optional Chaining (?) för att undvika fel om name är undefined, och kontrollera egenskaper existerar innan man anropar metoder på dem.
+        
+        // console.log för att ser statusen av sökningen
+        console.log("Category name:", categoriesString, "Match category:", matchCategory);
 
-        // Search in description
-        const title = recipe.name?.toLowerCase().includes(query); // använda Optional Chaining (?) för att undvika fel om name är undefined, och kontrollera egenskaper existerar innan man anropar metoder på dem.
-        const description = recipe.description?.toLowerCase().includes(query) || false;
+        return matchName || matchCategory || matchIngredients;
 
-        return matchName || matchCategory || matchIngredients || title || description;
+        
+
     });
     
 });
