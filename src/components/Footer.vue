@@ -8,19 +8,16 @@
 
     <!-- Content -->
     <div class="footer-content">
-      
-      <h2 class="title">
-        About
-      </h2>
+      <h2 class="title">About</h2>
 
       <p class="text">
-        We help you discover the endless possibilities of your rice cooker, 
-        from perfectly fluffy rice and hearty one-pot meals to surprising 
-        desserts and breakfast dishes. Our goal is to show you how versatile 
-        and convenient rice cooker cooking can be, making delicious meals 
-        accessible for everyone. Explore our collection of rice cooker recipes, 
-        discover new favorites, and transform your kitchen routine with the 
-        simplicity and joy of one-pot cooking.
+        We help you discover the endless possibilities of your rice cooker, from
+        perfectly fluffy rice and hearty one-pot meals to surprising desserts
+        and breakfast dishes. Our goal is to show you how versatile and
+        convenient rice cooker cooking can be, making delicious meals accessible
+        for everyone. Explore our collection of rice cooker recipes, discover
+        new favorites, and transform your kitchen routine with the simplicity
+        and joy of one-pot cooking.
       </p>
     </div>
 
@@ -45,14 +42,12 @@
 
     <!-- Footer Bar -->
     <div class="footer-bar">
-        <img
-          src="@/assets/social/chas_logo.svg"
-          class="logo"
-          alt="ChasAcademy logo"
-        />
-      <p>
-        &copy; ChasAcademy | FUX25  | Grupp A
-      </p>
+      <img
+        src="@/assets/social/chas_logo.svg"
+        class="logo"
+        alt="ChasAcademy logo"
+      />
+      <p>&copy; ChasAcademy | FUX25 | Grupp A</p>
     </div>
   </footer>
 </template>
@@ -89,31 +84,24 @@
   position: relative;
   z-index: 3;
   max-width: 100%;
-  padding: 4rem 1rem;
+  padding: 3rem 3rem;    /* Fix space from left side with 48px = 3rem*/
   text-align: left;
   margin: 0 auto;
 }
 
+/* Responsive Title */
 .title {
-  font-size: 3rem;
+  font-size: 2.2rem; /* smaller on mobile */
   font-weight: 600;
   margin-bottom: 1rem;
 }
 
+/* Responsive Text */
 .text {
-  font-size: 1.25rem;
-  line-height: 1.7rem;
+  font-size: 1.1rem; /* smaller on mobile */
+  line-height: 1.6rem;
   margin-bottom: 3rem;
   max-width: 600px;
-}
-
-.footer-link {
-  color: white;
-  text-decoration: none;
-}
-
-.footer-link:hover {
-  text-decoration: underline;
 }
 
 /* Social Icons */
@@ -121,18 +109,18 @@
   position: relative;
   z-index: 3;
   display: flex;
-  gap: 1.5rem;
+  gap: 1rem; /* smaller spacing on mobile */
   justify-content: flex-start;
-  margin-bottom: 3rem;
-  padding-left: 1rem;
+  margin-bottom: 2rem;
+  padding-left: 3rem;   /* 3rem = 48px */
   max-width: 100%;
   margin-left: auto;
   margin-right: auto;
 }
 
 .icon-box {
-  width: 66px;
-  height: 66px;
+  width: 55px; /* smaller on mobile */
+  height: 55px;
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -142,38 +130,56 @@
   cursor: pointer;
 }
 
-.icon-box:hover {
-  opacity: 0.75;
-}
-
 .icon-box img {
-  width: 44px;
-  height: 44px;
+  width: 36px; /* smaller on mobile */
+  height: 36px;
 }
 
 /* Footer Bar */
 .footer-bar {
   background: var(--brown-color);
   color: #fff;
-  padding: 1.3rem 2rem;
+  padding: 1.1rem 1.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 0.8rem;
   position: relative;
   z-index: 3;
+  text-align: center;
 }
 
 .logo {
-  height: 40px;
+  height: 32px; /* smaller on mobile */
   cursor: pointer;
 }
 
-.logo-link {
-  display: inline-block;
+/* Larger screens */
+@media (min-width: 768px) {
+  .title {
+    font-size: 2.8rem;
+  }
+
+  .text {
+    font-size: 1.25rem;
+    line-height: 1.7rem;
+  }
+
+  .icon-box {
+    width: 66px;
+    height: 66px;
+  }
+
+  .icon-box img {
+    width: 44px;
+    height: 44px;
+  }
+
+  .logo {
+    height: 40px;
+  }
 }
 
-/* Media Queries */
 @media (min-width: 1024px) {
   .footer-content {
     max-width: 1280px;
@@ -181,6 +187,7 @@
 
   .icons {
     max-width: 1280px;
+    gap: 1.5rem;
   }
 }
 </style>
