@@ -96,15 +96,19 @@ onMounted(async () => {
 const currentRating = ref(0);
 const userHasRated = ref(false);
 
-// Funktion som hanterar röstning 
+// Handles the user rating interaction 
 const handleRating = async (stars) => {
-  currentRating.value = stars; // Uppdatera stjärnorna på skärmen
+  // 1. Optimistic UI Update: 
+  // Update the UI immediately so the user feels the app is instant.
+  // We don't wait for the server response here.
+  currentRating.value = stars; 
   
   try {
-    // Skicka till API direkt via vår service-funktion
+    // 2. API Call: Send the rating to the backend
     await postRating(route.params.id, stars);
 
-    // Hämta det uppdaterade betyg direkt
+    // 3. Re-fetch Ratings: 
+    // Get the new average rating for the recipe to ensure data consistency.
     const updatedRatings = await fetchRatings(route.params.id);
     recipe.value.ratings = updatedRatings || [];
     
