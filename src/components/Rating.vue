@@ -1,21 +1,48 @@
 <script setup>
 import { ref } from 'vue'
 
+/**
+ * Rating Component
+ * A reusable component that displays 1-5 stars.
+ * Can be used in 'read-only' mode (for lists) or 'interactive' mode (for voting).
+ */
+
 const props = defineProps({
+  // The current rating value (v-model binding)
   modelValue: { type: Number, default: 0 },
+
+  // If true, the user cannot interact/vote (used in RecipeCard)
   readonly: { type: Boolean, default: false }
 })
 
+// Emits 'update:modelValue' to support v-model in the parent
 const emit = defineEmits(['update:modelValue'])
+
+// Local state for hover effect (UX improvement)
+// This allows stars to light up when hovering, without changing the actual saved rating.
 const hoverRating = ref(0)
 
+/**
+ * Handles the click event on a star.
+ * Only emits the update event if the component is NOT in read-only mode.
+ */
+
 const setRating = (star) => {
-  if (props.readonly) return
+  if (props.readonly) return // Guard clause: Stop if readonly
   emit('update:modelValue', star)
 }
 
+/**
+ * Determines if a star should be filled (yellow) or empty (grey).
+ * Logic:
+ * 1. If readonly: Check against the actual saved rating (modelValue).
+ * 2. If interactive: Check against hoverRating (if hovering) OR modelValue.
+ */
+
 const isFilled = (star) => {
   if (props.readonly) return star <= Math.round(props.modelValue)
+
+  // Use hoverRating for immediate visual feedback, fallback to actual value
   return star <= (hoverRating.value || props.modelValue)
 }
 </script>
