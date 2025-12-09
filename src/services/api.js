@@ -61,26 +61,27 @@ export async function fetchRatings(recipeId) {
 }
 
 /**
- * Posts a rating for a specific recipe
- * param recipeId - The ID of the recipe
- * param rating - The rating value (number)
- * throws Error If the API request fails
+ * Posts a rating for a specific recipe.
+ * * @param {string|number} recipeId - The ID of the recipe
+ * @param {number} rating - The rating value (1-5)
+ * @throws {Error} If the API request fails
  */
 export async function postRating(recipeId, rating) {
   const response = await fetch(`${API_BASE_URL}/${TEAM_ID}/recipes/${recipeId}/ratings`, {
     
     method: 'POST', 
     headers: {      
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json' // Inform server we are sending JSON data
     },
-    body: JSON.stringify(rating)
+    body: JSON.stringify(rating) // Serialize the number to JSON format
   })
 
   if (!response.ok) {
     throw new Error('Failed to post rating')
   }
   
-  // Om servern svarar 204 (No Content), får vi inte köra .json()
+  // Handle "No Content" response (HTTP 204) to avoid JSON parsing errors
+  // Some APIs return 204 when a save is successful but have no data to return.
   if (response.status === 204) {
     return null
   }
