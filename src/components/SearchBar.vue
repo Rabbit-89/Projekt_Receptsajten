@@ -30,10 +30,11 @@ const executeSearch = () => {
             <input type="text" v-model="localSearchQuery" placeholder="Search..." class="search-input" />
             <span class="search-icon"><img class="icon" src="../assets/icon_search.png"/></span> 
         </div>
-
+ 
+        <!--- 
         <button type="submit" class="search-button">
         Search
-        </button>
+        </button> -->
     </form>
 
 </template>
@@ -78,25 +79,6 @@ const executeSearch = () => {
 
 }
 
-
-/* 5. Sökknappen */
-.search-button {
-  background-color: var(--gold-color); 
-  color: var(--white-color);
-  padding: 10px 25px;
-  border: none;
-  border-radius: 8px; 
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  height: 50px; 
-}
-
-.search-button:hover {
-  background-color: var(--brown-color); 
-
-}
 
 .search-icon {
   position: absolute;

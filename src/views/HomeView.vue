@@ -80,9 +80,9 @@ const filteredRecipes = computed(() => {
         console.log("Recipe name",recipe.title)
         console.log("Match name:", matchName);
 
-        // Search in ingredients
+        /*
         const ingredients = recipe.ingredients || [];
-        const matchIngredients = ingredients.map(ing => ing.toLowerCase()).join("").includes(query);
+        const matchIngredients = ingredients.map(ing => ing.toLowerCase()).join("").includes(query); */
 
         // kontrollera om kategorierna är en sträng av array
         const categoriesArray = Array.isArray(recipe.categories) ? recipe.categories : [];
@@ -94,7 +94,7 @@ const filteredRecipes = computed(() => {
         // console.log för att ser statusen av sökningen
         console.log("Category name:", categoriesString, "Match category:", matchCategory);
 
-        return matchName || matchCategory || matchIngredients;
+        return matchName || matchCategory;
 
         
 
