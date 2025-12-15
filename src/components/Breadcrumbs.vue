@@ -6,16 +6,21 @@
 <script setup>
 import { RouterLink } from 'vue-router'
 
-const props = defineProps({
+/**
+ * Breadcrumb item definition.
+ * - label: text shown in the breadcrumb.
+ * - to (optional): route location; if omitted, the item is treated as the current page.
+ */
+const { items } = defineProps({
   items: {
-    type: Array,
+    type: Array, // Array of { label: string, to?: string }
     required: true
   }
 })
 </script>
 
 <template>
-  <nav class="breadcrumbs">
+  <nav class="breadcrumbs" aria-label="Breadcrumb navigation">
     <template v-for="(item, index) in items" :key="index">
       <RouterLink 
         v-if="item.to" 
@@ -29,12 +34,14 @@ const props = defineProps({
         v-else 
         class="breadcrumb-current"
         :aria-current="index === items.length - 1 ? 'page' : undefined"
+        aria-label="Current page"
       >
         {{ item.label }}
       </span>
       <span 
         v-if="index < items.length - 1" 
         class="breadcrumb-separator"
+        aria-label="Separator"
       >
         >
       </span>
