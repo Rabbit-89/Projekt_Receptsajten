@@ -41,10 +41,10 @@ console.log('Category Counts:', categoryCounts.value);
 
 //use computed to create categories array with recipe counts
 const categories = computed(() => [
-  { id: 1, name: 'Breakfast', categoriesData: 'Breakfast', recipeCount: categoryCounts.value.Breakfast, icon: breakfastIcon },
-  { id: 2, name: 'Lunch', categoriesData: 'Lunch', recipeCount: categoryCounts.value.Lunch, icon: lunchIcon },
-  { id: 3, name: 'Dinner', categoriesData: 'Dinner', recipeCount: categoryCounts.value.Dinner, icon: dinnerIcon },
-  { id: 4, name: 'Desserts', categoriesData: 'Desserts', recipeCount: categoryCounts.value.Desserts, icon: dessertIcon },
+  { id: 1, name: 'Breakfast', slug: 'Breakfast', recipeCount: categoryCounts.value.Breakfast, icon: breakfastIcon },
+  { id: 2, name: 'Lunch', slug: 'Lunch', recipeCount: categoryCounts.value.Lunch, icon: lunchIcon },
+  { id: 3, name: 'Dinner', slug: 'Dinner', recipeCount: categoryCounts.value.Dinner, icon: dinnerIcon },
+  { id: 4, name: 'Desserts', slug: 'Desserts', recipeCount: categoryCounts.value.Desserts, icon: dessertIcon },
 ])
 
 //Simple total - the total number of objects/recipe objects in the recipes array
@@ -96,10 +96,10 @@ onMounted(() => {
       </router-link>
 
       <router-link v-for="category in categories" :key="category.id"
-        :to="{ name: 'category', params: { categoryId: category.categoriesData } }" :aria-current="route.params.categoryId === category.categoriesData ? 'page':undefined ">
+        :to="{ name: 'category', params: { categoryId: category.slug } }" :aria-current="route.params.categoryId === category.slug ? 'page':undefined ">
         <div class="category-icon">
           <!--Different icons for each category-->
-          <img :src="getCategoryIcon(category.categoriesData)" :alt="category.name" class="category-svg"></img>
+          <img :src="getCategoryIcon(category.slug)" :alt="category.name" class="category-svg"></img>
         </div>
         <div class="category-content">{{ category.name }}</div>
         <div class="recipeCount">{{ category.recipeCount }} Recipes</div>
@@ -149,7 +149,7 @@ h1 {
 .numberOfRecipes,
 .recipeCount {
   font-size: 1.25rem;
-  color: var(--dark-gray-color);
+  color:#4d4a4a ;
   font-weight: 400;
   margin-top: 0.5rem;
 }
