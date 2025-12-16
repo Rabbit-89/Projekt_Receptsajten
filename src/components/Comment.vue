@@ -82,7 +82,8 @@ const formatDate = (dateString) => {
 
 .comment-box {
   flex: 1;
-  margin-left: 2rem;
+  width: 100%;
+  margin-left: 0;
 }
 .comment-card {
   display: flex;
@@ -103,6 +104,7 @@ const formatDate = (dateString) => {
   justify-content: center;
   font-size: 1.3rem;
   margin-left: 2rem;
+  margin-right: 2rem;
 }
 
 .comment-author {
