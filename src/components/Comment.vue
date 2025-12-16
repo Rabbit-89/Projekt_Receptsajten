@@ -121,18 +121,4 @@ const formatDate = (dateString) => {
 .comment-text {
   margin-top: 0.3rem;
 }
-
-/* Mobile responsiveness */
-@media (max-width: 576px) {
-
-  .avatar {
-    margin-left: 0;
-    margin-bottom: 0.5rem;
-  }
-
-  .comment-box {
-    margin-left: 0;
-    width: 100%;
-  }
-}
 </style>
