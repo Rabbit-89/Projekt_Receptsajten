@@ -149,7 +149,7 @@ h1 {
 .numberOfRecipes,
 .recipeCount {
   font-size: 1.25rem;
-  color:#4d4a4a ;
+  color:#605d5d ;
   font-weight: 400;
   margin-top: 0.5rem;
 }
