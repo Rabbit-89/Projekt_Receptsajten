@@ -21,42 +21,58 @@ const { items } = defineProps({
 
 <template>
   <nav class="breadcrumbs" aria-label="Breadcrumb navigation">
-    <template v-for="(item, index) in items" :key="index">
-      <RouterLink 
-        v-if="item.to" 
-        :to="item.to" 
-        :aria-current="index === items.length - 1 ? 'page' : undefined"
-        class="breadcrumb-link"
+    <ol class="breadcrumb-list">
+      <li
+        v-for="(item, index) in items"
+        :key="index"
+        class="breadcrumb-item"
       >
-        {{ item.label }}
-      </RouterLink>
-      <span 
-        v-else 
-        class="breadcrumb-current"
-        :aria-current="index === items.length - 1 ? 'page' : undefined"
-        aria-label="Current page"
-      >
-        {{ item.label }}
-      </span>
-      <span 
-        v-if="index < items.length - 1" 
-        class="breadcrumb-separator"
-        aria-label="Separator"
-      >
+        <RouterLink 
+          v-if="item.to" 
+          :to="item.to" 
+          :aria-current="index === items.length - 1 ? 'page' : undefined"
+          class="breadcrumb-link"
         >
-      </span>
-    </template>
+          {{ item.label }}
+        </RouterLink>
+        <span 
+          v-else 
+          class="breadcrumb-current"
+          :aria-current="index === items.length - 1 ? 'page' : undefined"
+        >
+          {{ item.label }}
+        </span>
+        <span 
+          v-if="index < items.length - 1" 
+          class="breadcrumb-separator"
+          aria-hidden="true"
+        >
+          >
+        </span>
+      </li>
+    </ol>
   </nav>
 </template>
 
 <style scoped>
 .breadcrumbs {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.5rem;
   margin-bottom: 2rem;
   font-family: var(--font-main);
   font-size: 14px;
+}
+
+.breadcrumb-list {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
 }
 
 .breadcrumb-link {
