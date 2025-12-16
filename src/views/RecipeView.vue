@@ -58,7 +58,7 @@ const rating = computed(() => {
     }, 0) / recipe.value.ratings.length;
 
     // Returnera med 1 decimal (t.ex. 4.5)
-    return avg.toFixed(1);
+    return Number(avg.toFixed(1));
   }
   
   // Om inga betyg finns
