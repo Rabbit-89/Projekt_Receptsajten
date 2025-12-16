@@ -87,15 +87,15 @@ onMounted(() => {
   <section class="category-box">
     <h1>Categories</h1>
     <div class="category-nav">
-      <router-link :to="{ name: 'home' }" :class="{ active: !route.params.categoryId }" :aria-current="route.name === 'home' ? 'page':undefined ">
+      <RouterLink :to="{ name: 'home' }" :class="{ active: !route.params.categoryId }" :aria-current="route.name === 'home' ? 'page':undefined ">
         <div class="allRecipes-svg-container">
           <img src="../assets/icon_allRecipes.svg" alt="All Recipes Icon" class="allRecipes-svg"></img>
         </div>
         All Recipes
         <div class="numberOfRecipes">{{ totalRecipes }} Recipes</div>
-      </router-link>
+      </RouterLink>
 
-      <router-link v-for="category in categories" :key="category.id"
+      <RouterLink v-for="category in categories" :key="category.id"
         :to="{ name: 'category', params: { categoryId: category.slug } }" :aria-current="route.params.categoryId === category.slug ? 'page':undefined ">
         <div class="category-icon">
           <!--Different icons for each category-->
@@ -103,7 +103,7 @@ onMounted(() => {
         </div>
         <div class="category-content">{{ category.name }}</div>
         <div class="recipeCount">{{ category.recipeCount }} Recipes</div>
-      </router-link>
+      </RouterLink>
     </div>
 
   </section>
