@@ -5,18 +5,15 @@ import { RouterLink } from 'vue-router'
 <template>
   <nav class="navbar">
     <div class="logobox">
-      <img alt="Recipe Website logo" class="logo" src="/src/assets/icon_logo.svg" width="125" height="125" />
-      <h2>logo</h2>
+      <RouterLink to="/">
+        <img alt="Recipe Website logo" class="logo" src="/src/assets/icon_logo.svg" width="125" height="125" />
+      </RouterLink>
     </div>
 
     <div class="nav-link">
       <RouterLink to="/">Home</RouterLink>
 
-      <!-- <ul class="burger-items">
-<li><RouterLink to="/">Home</RouterLink></li>
-        <li><RouterLink to="/categories">Categories</RouterLink></li>
-        
-    </ul> -->
+    
     </div>
 
 
@@ -86,9 +83,23 @@ import { RouterLink } from 'vue-router'
 .nav-link a {
 
   display: inline-block;
+  text-decoration: none;
+  font-family: var(--font-main);
+  font-size: 1.25rem;
   padding: 0 1rem;
   border-left: 1px solid rgba(255, 255, 255, 0.12);
   color: #ffffff;
+}
+
+.nav-link a:hover {
+
+  display: inline-block;
+  text-decoration: none;
+  font-family: var(--font-main);
+  font-size: 1.25rem;
+  padding: 0 1rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--orange-color);
 }
 
 nav a:first-of-type {

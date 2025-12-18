@@ -1,80 +1,263 @@
+<!--
+  RecipeView Component
+  Displays the full details of a single recipe including ingredients, instructions,
+  rating and comments. (TBD: Add comments)
+-->
 <script setup>
-import { ref, onMounted, computed } from 'vue'
-import { useRoute, RouterLink } from 'vue-router'
-import recipesData from '../data/recipes.json'
-import Checklist from '../components/Checklist.vue'
-import Breadcrumbs from '../components/Breadcrumbs.vue'
-import RecipeHeader from '../components/RecipeHeader.vue'
+import { ref, onMounted, computed } from "vue";
+import { useRoute, RouterLink } from "vue-router";
+import { fetchRecipeById, postRating, fetchRatings, postComment, fetchComments } from "../services/api";
+import Checklist from "../components/Checklist.vue";
+import Breadcrumbs from "../components/Breadcrumbs.vue";
+import RecipeHeader from "../components/RecipeHeader.vue";
+import Rating from "../components/Rating.vue";
+import Comment from "../components/Comment.vue";
+import LoadingSpinner from "../components/LoadingSpinner.vue";
+import ErrorMessage from "../components/ErrorMessage.vue";
+import CommentForm from "@/components/CommentForm.vue";
 
-const route = useRoute()
-const recipe = ref(null)
-const checkedIngredients = ref(new Set())
-const checkedSteps = ref(new Set())
-
-const formatCategoryName = (slug) => {
-  return slug
-    .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ')
-}
+const route = useRoute();
+const recipe = ref(null);
+const loading = ref(true);
+const error = ref(false);
+const checkedIngredients = ref(new Set());
+const checkedSteps = ref(new Set());
 
 const categoryName = computed(() => {
-  if (!recipe.value) return ''
-  return formatCategoryName(recipe.value.categorySlug)
-})
+  if (!recipe.value || !recipe.value.categories?.length) return "";
+  return recipe.value.categories[0];
+});
+
+const categorySlug = computed(() => {
+  if (!recipe.value || !recipe.value.categories?.length) return "";
+  return recipe.value.categories[0].toLowerCase();
+});
 
 const breadcrumbs = computed(() => {
-  if (!recipe.value) return []
+  if (!recipe.value) return [];
   return [
-    { label: 'Home', to: '/' },
-    { label: categoryName.value, to: `/category/${recipe.value.categorySlug}` },
-    { label: recipe.value.name }
-  ]
-})
+    { label: "Home", to: "/" },
+    { label: categoryName.value, to: `/categories/${categoryName.value}` },
+    { label: recipe.value.title },
+  ];
+});
 
-onMounted(() => {
-  const recipeId = parseInt(route.params.id)
-  recipe.value = recipesData.find(r => r.id === recipeId)
-})
+const ingredientsCount = computed(() => recipe.value?.ingredients?.length || 0);
+
+const rating = computed(() => {
+  // Om inget recept finns än, visa 0
+  if (!recipe.value) return 0;
+
+  // Om det finns betyg
+  if (recipe.value.ratings?.length > 0) {
+    const avg = recipe.value.ratings.reduce((sum, r) => {
+     
+      // Vi kollar: Är 'r' en siffra? Använd den. Annars hämta .rating eller .value
+      const ratingValue = typeof r === 'number' ? r : (r.rating || r.value || 0);
+      return sum + ratingValue;
+    }, 0) / recipe.value.ratings.length;
+
+    // Returnera med 1 decimal (t.ex. 4.5)
+    return Number(avg.toFixed(1));
+  }
+  
+  // Om inga betyg finns
+  return 0;
+});
+
+const commentsCount = computed(() => recipe.value?.comments?.length || 0);
+
+onMounted(async () => {
+  const recipeId = route.params.id;
+  loading.value = true; // Show loading spinner when data is being fetched
+  error.value = false; // Reset error state
+
+  try {
+    recipe.value = await fetchRecipeById(recipeId);
+
+    // Ensure comments array exists
+    const comments = await fetchComments(recipeId);
+    recipe.value.comments = comments || [];
+   
+    // Hämtar betyget 
+    const ratings = await fetchRatings(recipeId);
+    recipe.value.ratings = ratings || [];
+
+  } catch (err) {
+    console.error("Failed to load recipe or comments", err);
+    error.value = true; // Show error message if something went wrong
+
+    recipe.value = null; // Clear recipe data if there's an error
+  } finally {
+    loading.value = false; // Hide loading spinner when data is loaded
+  }
+});
+
+const currentRating = ref(0);
+const userHasRated = ref(false);
+
+// Handles the user rating interaction 
+const handleRating = async (stars) => {
+  // 1. Optimistic UI Update: 
+  // Update the UI immediately so the user feels the app is instant.
+  // We don't wait for the server response here.
+  currentRating.value = stars; 
+  
+  try {
+    // 2. API Call: Send the rating to the backend
+    await postRating(route.params.id, stars);
+
+    // 3. Re-fetch Ratings: 
+    // Get the new average rating for the recipe to ensure data consistency.
+    const updatedRatings = await fetchRatings(route.params.id);
+    recipe.value.ratings = updatedRatings || [];
+    
+    userHasRated.value = true;
+
+  } catch (error) {
+    console.error(error);
+    alert("Kunde inte spara betyget.");
+  }
+};
+
+// --- COMMENT FORM ---
+const newName = ref("");
+const newComment = ref("");
+const thanks = ref(false);
+
+/*
+  NEW: Add comment using API and push the returned comment into recipe.comments.
+*/
+const addComment = async () => {
+  const name = newName.value.trim();
+  const comment = newComment.value.trim();
+
+  if (!name || !comment) {
+    alert("Please fill in the required fields: Name and Comment");
+    return;
+  }
+
+  try {
+    // Send the comment to the API
+    const savedComment = await postComment(route.params.id, name, comment);
+
+    /*
+      The API returns this structure:
+      {
+        name: "...",
+        comment: "...",
+        createdAt: "2025-02-01T12:00:00Z"
+      }
+    */
+
+    // Add the returned comment into the list
+    recipe.value.comments.push({
+      name: savedComment.name,
+      comment: savedComment.comment,
+      createdAt: savedComment.createdAt
+    });
+
+    // Reset form fields
+    newName.value = "";
+    newComment.value = "";
+        
+    console.log(savedComment);  // For debugging
+    // Show thank you message
+    thanks.value = true;
+    setTimeout(() => {
+      thanks.value = false;
+    }, 3000);
+
+  } catch (error) {
+    console.error("Failed to submit comment:", error);
+    alert("Could not send your comment. Please try again.");
+  }
+};
+
 </script>
 
 <template>
-  <main class="recipe-view" v-if="recipe">
+  <!-- Show loading spinner while data is being fetched -->
+  <LoadingSpinner v-if="loading" message="Loading recipe..." />
+
+  <!-- Show error message if something went wrong -->
+  <div v-else-if="error" class="error-wrapper">
+    <ErrorMessage
+      title="Recipe not found"
+      message="We couldn't load this recipe. It may not exist or there was an error."
+    />
+    <RouterLink to="/" class="back-link">← Back to recipes</RouterLink>
+  </div>
+
+  <!-- Main recipe view - only shown when recipe data is loaded -->
+  <main class="recipe-view" v-else-if="recipe">
+    <!-- Navigation breadcrumbs -->
     <Breadcrumbs :items="breadcrumbs" />
 
+    <!-- Recipe header -->
     <RecipeHeader
-      :name="recipe.name"
-      :image="recipe.image"
-      :cooking-time="recipe.cookingTime"
-      :ingredients-count="recipe.ingredientsCount"
-      :rating="recipe.rating"
-      :comments-count="recipe.comments.length"
+      :name="recipe.title"
+      :image="recipe.imageUrl"
+      :cooking-time="recipe.timeInMins"
+      :ingredients-count="ingredientsCount"
+      :rating="rating"
+      :comments-count="commentsCount"
       :description="recipe.description"
     />
 
+    <!-- Recipe content -->
     <div class="recipe-content">
-      <Checklist 
-        :items="recipe.ingredients"
+      <Checklist
+        :items="recipe.ingredients || []"
         :checked-items="checkedIngredients"
         title="Ingredients"
         list-type="unordered"
         @update:checked-items="checkedIngredients = $event"
       />
-
-      <Checklist 
-        :items="recipe.steps"
+      <Checklist
+        :items="recipe.instructions || []"
         :checked-items="checkedSteps"
         title="Instructions"
         list-type="ordered"
         @update:checked-items="checkedSteps = $event"
       />
     </div>
-  </main>
 
-  <div v-else class="recipe-not-found">
-    <h2>Recipe not found</h2>
-    <RouterLink to="/" class="breadcrumb-link">← Back to recipes</RouterLink>
-  </div>
+    <!-- Rating section -->
+    <div class="rating-section">
+      <h3>Did you enjoy cooking this meal?</h3>
+      <Rating
+        :modelValue="currentRating"
+        @update:modelValue="handleRating"
+        class="interactive-stars"
+      />
+      <p v-if="userHasRated" class="thank-you-text">
+        Thanks! You have given this recipe a {{ currentRating }} star rating.
+      </p>
+      <p v-else class="help-text">
+        Please click on the stars to set your rating.
+      </p>
+    </div>
+
+    <!-- Add CommentForm -->
+    <CommentForm
+      :recipe-id="route.params.id"
+      @comment-added="recipe.comments.push($event)"
+    />
+
+    <!-- Comments section -->
+    <div class="comments-wrapper">
+      <h3>{{ commentsCount }} Comments</h3>
+    
+      <!-- Show Comments List -->
+      <Comment
+        v-for="(c, index) in recipe.comments"
+        :key="index"
+        :comment="c"
+        :comments-count="recipe.comments.length"
+      />
+    </div>
+  </main>
 </template>
 
 <style scoped>
@@ -97,28 +280,107 @@ onMounted(() => {
   margin-right: auto;
 }
 
-.recipe-not-found {
-  text-align: center;
-  padding: 4rem 2rem;
+.error-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 2rem 1rem;
+}
+
+.back-link {
+  display: inline-block;
+  padding: 0.75rem 2rem;
+  background-color: var(--brown-color);
+  color: var(--white-color);
+  text-decoration: none;
+  border-radius: 8px;
   font-family: var(--font-main);
-  color: var(--black-color);
-}
-
-.recipe-not-found h2 {
-  color: var(--black-color);
-  margin-bottom: 2rem;
-}
-
-.breadcrumb-link {
-  color: var(--black-color);
-  text-decoration: none;
+  font-size: 1rem;
   font-weight: 500;
-  transition: color 0.2s ease;
-  text-decoration: underline;
+  transition: background-color 0.2s;
 }
 
-.breadcrumb-link:hover {
-  text-decoration: none;
+.back-link:hover {
+  background-color: var(--gold-color);
 }
+
+.rating-section {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--grey-color);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.rating-section h3 {
+  font-family: var(--font-secondary);
+  font-size: 1.8rem;
+  color: var(--black-color);
+  margin: 0;
+}
+
+.interactive-stars {
+  font-size: 2.5rem;
+}
+
+.thank-you-text,
+.thanks-text {
+  color: var(--gold-color);
+  font-weight: bold;
+  font-family: var(--font-main);
+}
+
+.help-text {
+  color: var(--dark-gray-color);
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 600px) {
+  .interactive-stars {
+    font-size: 2rem;
+  }
+}
+
+.rating-section h3 {
+  font-size: 1.4rem;
+  padding: 0 10px;
+}
+
+.thank-you-text,
+.help-text,
+.thanks-text {
+  font-size: 0.9rem;
+  padding: 0 1rem;
+  line-height: 1.4;
+}
+
+.rating-section {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+}
+
+.comments-wrapper h3 {
+  font-family: var(--font-secondary);
+  font-size: 1.8rem;
+  color: var(--black-color);
+  margin: 0;
+}
+.comments-wrapper {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  background: #ffffff; /* ljus bakgrund */
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 1rem;
+}
+
 </style>
-

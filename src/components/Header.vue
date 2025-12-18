@@ -8,8 +8,8 @@ import Navigation from './Navigation.vue';
         <img class="hero-image" src="../assets/HeroImage2.png" alt="Delicious food" />
         <Navigation />
         <div class="hero-content">
-            <h1>Quick Recipes</h1>
-            <p>Where fast meets flavorful</p>
+            <h1>Rice Cooker Recipes</h1>
+            <p>Got a rice cooker? Good! No other appliance needed</p>
         </div>
     </header>
 </template>
@@ -17,12 +17,15 @@ import Navigation from './Navigation.vue';
 <style scoped>
 h1 {
     font-family: var(--font-secondary);
-    font-size: 5rem;
+    font-size: 3rem;
+    line-height: 4rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
 }
 
 p {
     font-family: var(--font-main);
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-style: normal;
     line-height: 2rem;
     /* 160% */
@@ -64,5 +67,32 @@ p {
     padding: 2rem;
     height: 100%;
     margin-top: 10%;
+}
+/* * Styles for medium screens (e.g.tablet, laptops) */ 
+@media screen and (min-width: 768px) {
+    h1 {
+    font-family: var(--font-secondary);
+    font-size: 4rem;
+    line-height: 4rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+    .hero-content {
+        margin-top: 15%;
+    }
+}
+
+/* * Styles for large screens */
+@media screen and (min-width: 1200px) {
+    h1 {
+    font-family: var(--font-secondary);
+    font-size: 4.5rem;
+    line-height: 4rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+    .hero-content {
+        margin-top: 10%;
+    }
 }
 </style>

@@ -1,31 +1,57 @@
+<!--
+  RecipeCard Component
+  Displays a preview card for a recipe with image, title, description, and key details.
+  Clicking the card navigates to the full recipe view.
+-->
 <script setup>
+import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
+// import Rating from './Rating.vue';
 
-defineProps({
+// Props: recipe object containing all recipe information
+const props = defineProps({
     recipe: {
         type: Object,
         required: true
     }
 })
+
+// Calculate the number of ingredients in the recipe
+const ingredientsCount = computed(() => props.recipe.ingredients?.length || 0);
+
+// En smart variabel. Varje gång ny data kommer in (t.ex. någon röstar), räknas den här koden om automatiskt så att snittbetyget alltid är uppdaterat.
+const rating = computed(() => {
+    if (props.recipe.ratings?.length > 0) { // Här görs en säkerhetskoll: "Finns det några betyg alls?"
+        // Detta är en loop som går igenom alla betyg för att räkna ut en totalsumma
+        const avg = props.recipe.ratings.reduce((sum, r) => {
+            // Kolla om det är en siffra eller ett objekt 
+            const ratingValue = typeof r === 'number' ? r : (r.rating || 0)
+            return sum + ratingValue
+        }, 0) / props.recipe.ratings.length
+        return Number(avg.toFixed(1))
+    }
+    return '0'
+})
 </script>
 
 <template>
-    <RouterLink :to="`/recipe/${recipe.id}`" class="recipe-card-link">
+  <!-- Clickable card that navigates to the full recipe view -->
+  <RouterLink :to="`/recipe/${recipe.id}`" class="recipe-card-link">
     <div class="recipe-card">
         <div class="recipe-image">
-            <img :src="recipe.image" :alt="recipe.name"/>
+            <img :src="recipe.imageUrl" :alt="recipe.title"/>
         </div>
         <div class="recipe-content">
-            <h2 class="recipe-title">{{ recipe.name }}</h2>
+            <h2 class="recipe-title">{{ recipe.title }}</h2>
             <div class="recipe-details">
-                <span class="recipe-detail-item"> <img src="@/assets/icons/time.svg" alt="Clock" /> {{ recipe.cookingTime }} min</span>
-                <span class="recipe-detail-item"> {{ recipe.ingredientsCount }} ingredients</span>
-                <span class="recipe-detail-item"> <img src="@/assets/icons/star.svg" alt="Star" /> {{ recipe.rating }}</span>
+                <span class="recipe-detail-item"> <img src="@/assets/icons/time.svg" alt="Clock" /> {{ recipe.timeInMins }} min</span>
+                <span class="recipe-detail-item"> {{ ingredientsCount }} ingredients</span>
+                <span class="recipe-detail-item"> <img src="@/assets/icons/star.svg" alt="Star" /> {{ rating }}</span>
             </div>
             <p class="recipe-description">{{ recipe.description }}</p>
         </div>
-    </div>
-    </RouterLink>
+      </div>
+  </RouterLink>
 </template>
 
 <style scoped>
@@ -97,9 +123,9 @@ defineProps({
 }
 
 .recipe-detail-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .recipe-description {
